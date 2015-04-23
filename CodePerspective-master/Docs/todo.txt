@@ -1,0 +1,431 @@
+﻿
+static analyis
+	double click zoom on single methods in layer graph
+
+	show outside/zoom out in layer graph
+
+	map out method field dependencies and calls for 
+	
+	zoom in on a class like the ViewModel class
+		see if it's easy to spot where class can be diveded
+	if class contains independent graphs, suggest to user that class can be reduced
+	graph nodes that fill most available sapce - compact draw mode - on by default for layer graph
+
+
+
+visual studio plugin
+	map source code to a static analysis graph
+	let programmer see graph vertically or horizonally as a panel
+	programmer can make custom layers, drag stuff around
+	in viewer programmer can filter on custom layers
+
+
+set/get call directions
+	set goes from function -> variable
+	get goes from variable -> function LtR
+
+
+test with silverlight
+
+reduce peverify errors in DeOps
+
+Parameter tracking
+	mark these lines in verify as not to ignore 'found address of value' and 'expected value'
+
+	tracking external instances
+		since call to external method includes 'this' parameter. it can be associate with parent class by weak reference
+		have to hash it or something to filter dupes
+
+	mscorlib_8 still a problem
+
+	field set/get - send values to be attached to call, dup stack?
+
+	UI ---
+	add return info to mouse over method
+		<calling func name> <- <return value>
+	use instance type view to digging into values?
+	*show parameter names in function calls with proper word wrapping :)
+	add to visualization
+	add to code view
+	For each function node have a last string arguments value
+	That gets drawn when the line gets updated
+	CallingFunction(x=4, y=3, msg='hello')
+	Watch state move through the app as well
+	Draw return values
+		Red for arguments, blue for return
+	need ID's per method call, hook up right to code
+		see how overhead changes
+
+reflect
+	Change colors from instace UI
+	support setting values of variables from instance UI
+	make a blog post demonstrating this, and asking people for their best color schemes
+		make one for obsian as a demo
+	support copy current field grid as a csv to clipboard
+	good way to play with colors and find a good scheme in real time, 2 birds, 1 stupid stone
+
+properties view
+	indexed properties not supported, should show, but not allow iteration
+	when connected to remote server no way to view client's own state in instance view
+
+draw offset class blocks in flow view to underscore multiple instances
+
+Remote
+	frame rate should not make colors take longer to reduce slower - maybe some way to decrease or re-calc opacity
+	field values in tooltip
+	public key encryption
+	send entry/holding info
+		on connect iterate stacks for nodes entered/waiting, send to client
+		when adding node hit to send, check if waiting/entered and add to list
+		remember nodes that have entry/waiting set, and each frame, see if still waiting, if removed from list, send client update
+
+instance value tracking
+	in code view show a drop down of instances
+	selected instance is set to 'focused instance'
+	take 'this' parameter with method enter/exit
+	if focused then last param/return values
+
+random
+	see if when i can remove signatures i can xray system dlls
+	commit and try to open/build/recompile with mono runtime
+
+	**Error trying to find common link between BuildContent and BuildContent, common had 0 index
+	background tooltip color in opengl
+	add more tool tips
+	Add thread details to class details so thread that touched class can be filtered on 
+	Dead threads not cleared from flow map? should be, some sort of max or something?
+
+instance view
+	match field name with static analysis
+		use short name from there
+		if field found that not in static analysis, then log
+	simplify field name
+		run field name through xdef, modify to match real time value
+			save value
+			replace any instance of that value, with shorter value
+
+track nested enum types in RecompileClass?
+static analysis - figure class dependencies from lower field and method dependencies
+
+xlibrary
+	move covered nodes into view model so different UIs dont share the same covered node set
+	
+scanner view
+	on select app, show in details below exactly what exe/dlls were xrayed
+	show corflags, have to use corflags.exe?
+
+quantify xray overhead
+	checkout overhead with xray tracking on/off
+	tracking methods, class create, etc.. ms/sec spent in xray
+
+
+details ui
+	instance
+		click on field blink it
+		double click on  field, pan over to it
+		back/forward button, pan to node
+		!trap / auto-release modes - trap keeps handles to classes, auto-release uses weak refs
+
+	method profile
+		**light up cell red for increase, green for decrease
+		**1 second refresh with pause button
+		click on method, blink it and call line
+		double click method pan to it
+	click name title in details, select/pan to that node and bring it into zoom if not
+	field profile
+		show methods that call to/from field
+
+layer graph
+	**outside zoom/not xrayed view
+	figure out top bottom of graph and give next graph more room
+	min horizontal distance
+
+	re-run xray on vsVim and see if it's a lot more understandable with the each component in a graph
+
+	don't draw node if smaller than point
+		use same draw code as tree map?
+    no matter what the size
+		set call point to center of parent node if too small to draw
+	have a 2 pix area inside node when drawing, if not engouh room then don't draw
+
+graph optimizations
+	pan/zoom shouldnt have to call resize
+	apply pan/zoom in renderer can be option that opengl views turn off to do pan/zoom as transformation
+	currently pan/zoom runs many resize cylcles, after change should take no resize cycles
+
+	background and outline colors saved in vbo
+	draw overlays dynamically inbetween - overlays blended
+	destroy color not showing for test app in openGL modes
+
+	maybe make another column if not enough room in rank
+
+linked source on screen
+	precalculate size of c# code word wrapped with 80 char max
+	when user is zoomed in enough to display the width, display it
+		mouse wheel over code scrolls it
+	have call link originate directly from hyper text function
+	when person clicks on function link, app 'flys' over to that function, zoom out/zoom in, like google earth
+	at end - user should see class graph, zoom into method graph, zoom into code, click on code links and zoom to connected functions
+	field text light up with set/get performed
+	give an occurance ID for functions, so can match up exactly which call from method was used
+
+real source editing
+	given a directory of source files
+	match source functions with methods
+	example, xray xlibrary, open in analyze and match with source files
+	if field/method dependencies graphed then there is a graph to start from
+	allow user to drag nodes in rank and pin node positions in each rank static
+
+explore apps
+	turn on exception catching for code generation
+	upgrade ilspy/cecil
+
+fps view
+	improve lighting world and on user
+	profile rendering THEN find savings
+	flag to redraw nodes / call lines
+	keep vertex color array seperate and mod/load that per run
+	port advanced drawing to 2d opengl
+	port advanced drawing to gdi+
+	support for only redrawing threadline on change
+	mouse look button?
+	call lines as 5 line arc though the sky
+	write code on walls - texture sides of blocks with C#, MSIL, Timing, and Instance info
+	size fields by instance count
+	vector font?
+	
+color profile 
+	obsidian colors - code/console view too
+	change at run time
+	load from file
+	serialize to xml
+	jurassic park lulz - green horizon - draw back wall iso view?
+
+class graph
+    **double click method node, go into method graph mode and just show that
+	**see if class graph can be derived from functions on draw, and we can remove class tracking from xlibrary
+	**call lines going backwards, not looking too good in gl
+	double click zoomed in class node, show method graph, save view mode in history
+
+treemap view
+	Put sub-classses inside parent classes so functions/methods are adacent?
+
+threadline
+	shade bg of alternate threads
+	add last run time to mouse over in threadline
+	if fields selected in thread line
+		show fields as row at bottom, at mid-point between accessing threads
+
+Thread filter
+	Different colors for call lines when viewing multiple threads
+	Option to 'intersect' on thread filter menu, just show nodes with threads in common
+
+builder
+	 build stats - time, dat size
+	 post-build command line to xray a build in debug mode so dev at any time can start introspex monitor
+	 show what the compiler settinsg were of the app when opened with xray
+	 rename field with types to anon classes to new name
+	 ability in interface to speedup/slowdown update speed
+
+scanner panel
+	option to recompile and remove signing
+	maybe need to create unique dat file name if multiple will be in the same directory
+	!!combined viewer!! - can load in multiple dats into same work space and shows updates accordingly
+	combined stack? if multiple dlls xrayed independently, could they detect they're in the same process and share the stack tracker?
+	install windows 8 VM and test scanning entire system
+		!!save snapshot before doing scan/replae
+
+code paths as a tree
+	clickin on node in tree shows subset
+	tree shows last run
+	there is 'something' here, there a 'code paths' that get run periodically
+		how can i define and show these paths, catagorize by time freq?
+
+unit-tests built in
+	ability to run funtions manually
+	can visually see real code block run and affected code blocks
+
+incorporate sound somehow?
+
+error handling
+	try to handle paint.net crashing with xray
+	maybe first pass source show's MSIL
+
+instance view
+	click title in instance view - focus on node in under current root, if zoomed into far, zoom out, or make outside visible
+	show fields in instance view even if no instances created
+	clicking on field should highlight in instance grid and vice versa
+	ivcryptostream not showing anything still
+	hyperlink in instance view to check out base types, etc..
+	search on instance page
+	ability to modify values
+	ability to prevent deleting of references by 'locking' on refresh, keeping list of instances not weak refs
+	button to show next/prev page of instances?
+	detect cyclic references in instance browser
+
+search box
+	show count next to search box for found #, clicking on # filters display to those nodes
+	state graph + function graph ( show inter-state calls, and calls between states ) = total program understanding
+	search also highlights code/instances
+
+profile
+	blink green outline when navigated
+	clicking on call in list, blinks the link
+		show under call dots
+
+console tab
+   run funtions on existing instances manually
+   change field values
+
+help tab
+	scrolls down
+	legend
+		show current colors
+		let user set diff colors, load/save configs
+		standard, matrix
+		call graph - red calls/dependent on, blue - converse
+
+look at functions with links that are no longer active
+	see if function could have returned without triggering an exit
+	test a chain of functions a b c d e f, where f throws, and c catches, test that intermediate calls have been cleared
+
+
+-------------------------------------------- ADVANCED --------------------------------------------
+
+self compiling
+	put xCompiler in xLib dll
+	copy exe/dlls on compile and save markers where source can be read from them
+	while xraying dll, show source code directly ripped from source exe/dll
+	allow user to modify source
+	re-compile exe/dlls
+	re-xray compiled exe/dlls
+	re-start xray'd exe
+
+override
+	user can edit MSIL
+	save, compile and activate override
+	override needs to be specified as a compile option
+	if override, and new code, then run new code, else run original code
+	msil could have hyper links to other functions
+		
+	can an entire late bound application be written from scratch inside, c#, 
+	later compiled without xray bindings, can xray build itself another xray??
+	
+recompile mscorlib, and put in same dir as software so my internal one is used instead
+	test recompiling mscorlib and rest of .net and having it used locally
+
+future 
+	people write and modify code as the app runs
+		able to override funcs and save result
+	people can collaborate and write running software in real time
+	full introspection and manipulation of all running objects
+
+memory tracking - heap dump tree map 
+
+tracking file system, network access from graph?
+
+sub function tracking
+   break every block where there's a branch in msil into it's own node
+	  with enter/exit overrides there
+   can use normal flow tracking and spring to see how internals of function are operating
+	  can't really use names, but can double click code, and the spring org will give a good sense of whats going on
+   code coverage stats can be given by tracking hit/unhit blocks
+	   shade nodes by percent thats been covered (more red if less covered)
+   call lines will come from sub  function of node with-in node
+   
+future editor
+	click on blocks, edit code
+	f5 launches app and everything starts lighting up
+	the end of multiple files for projects
+		everything is in one file, accessible by a logical tree
+		can find classes/vars quickly by typing the name like itunes
+	integrate with visual studio for real editing, post build step to use xray
+
+remote monitoring dll plugins to webserver
+	xray dll mode starts a mini http server embedded in dll
+	   serves div pages colered as blocks
+	   use javascript to click blocks zoom
+
+	  each dll has an embedded web server that when activated shows
+		whats going on in system
+
+	  if running as http then can go into xray mode at will, release with
+		xray inside and debug on demand, use a browser on any machine to
+		debug your app. go to the xray port
+		every second each http listening xray object pings the main port
+		   takes it if available, serves as a directory for other xray
+		   apps
+
+	when the dll is instantiated an xray server is created
+	this starts another server that xray remote can be used on
+	periodically the remote client sends a compressed bitfield of hit functions
+
+	
+system xray converter
+	scan system for .net exe's and dlls
+	recompile all with xray
+	when anything starts up it finds the running xray process and gives it a handle to be hooked into whenever
+
+future
+	---X-Ray
+	  if xrayed application detects ctrl alt x, current
+		app gui is frozen, and xray for app fades over.
+	  do for silverlight app as well
+		debug interfaces as you build them
+		if function doesnt work, fix it in real time
+		  so next click doesnt call an exception, but does something.
+
+	  each piece of the app compiles independently
+		the code is compiled as the program runs
+		  each step fleshing out the program
+
+	GOAL: USE X RAY TO BUILD AN ENTIRE APPLICATION WITHOUT CLOSING 
+	IT!!!  Debugging, error checking as new components added. 
+	Actual program never closed.
+	Taking out one component could cause a whole mesh of components 
+	to fail, but never the whole system, always a ROOT component to 
+	start from again.  add function, write in C#, compile and 
+	attach at runtime inside.  not called directly but wrapped 
+	around a component layer that pipes in/out variable 
+	input/outputs
+
+	root component is a loop always starting to try starting the 
+	first attached components.
+
+	the root component never stops.
+
+	interactive application can be built and never closed. a 
+	webserver or 'free' project where people can build components 
+	and attach.  links between components could even be over the 
+	network.
+
+	might already exist 'in functional' programming. but this is 
+	higher level.  the nucleus is procedural.  while the program 
+	build on procedural parts is acts functional.
+	-----
+
+
+	>-------
+	IF ALL APPS/DLLS xrayed on system, can view 'insides' of any running process at any time. 
+
+	 when not viewed - full speed, when viewed - html page updtating - 
+
+	http://127.0.0.1:34234:XRay/c/program files/myapp.dll
+
+	entry function checks if xray server up, if not inits it, if entry function already has a 
+	version then create a new one
+	xray server can be queried for all active running xray instances on the system
+
+	xray instances themselves can be check by xraying xray monitor exe file. then starting up 
+	xray server to monitor itself. real test of xray is can it monitor itself
+
+	xray your system dlls and always know what applications are doing
+
+	could run task manager where window is giant tree map of all processes running on the 
+	system - everything able to be zoomed in on. complete knowledge of the running system - 
+	'seeing' the code. app can see itself run
+
+	XRAY - can IL code be shown for functions, recompiled and injected into the app
+	can XRay build a set of dynamic functions that call each other at any time a function can 
+	be removed, improved, but the app itself is never turned off
+	<---------

@@ -1,0 +1,130 @@
+﻿2.0.1
+	Fixed bug where dat path was being reset
+
+2.0 
+	Remote Viewer
+
+1.0.6
+	Fixed bug with model not being set first in GdiRenderer
+
+1.0.5 
+	Fixed bug that caused crash on systems with windows themes turned off
+
+1.0.4
+	Fixed bug in adding assemblies from scanner panel
+	Removed instance tracking from structs - causing crashes
+
+1.0.3
+	Added CLR version to scanner panel
+	Press return to search in scannel panel
+	Experimental support for stripping signatures
+
+1.0.2
+	Downgraded to .Net 3.5
+
+1.0.1
+	Initial release
+
+
+
+show real-time calls between nodes on init graph
+instantiation graph
+	when new object is created, created an edge from creating class to new class
+
+ellipse text in treemap
+get text to show up next to nodes more often
+fixed text not showing up on call graph
+
+min height for boxes
+outside view in opengl
+back button goes back
+click reset hit, dont clear nodes being held in
+
+costa rica
+----
+
+application as function tree map
+
+highlight hit functions
+
+show path of code between functions
+
+show path as a ranked call graph
+
+extended info with timing information per method
+
+---
+put anonymous functions inside function
+
+show instructions added, show data objects tracked
+
+put anon classes in functions
+
+post process class ctor/cctor/anonymous method renaming
+
+rudamentry instance tracking
+
+---
+
+show sequence in time call tree is traversed
+	option to align nodes in rank columns by time last called
+		nodes called last at bottom, 'coldest' functions at top
+	should be able to look at call graph and determine the sequence of events that happened when a call went through
+	dont make it time based, but sequence based
+	when a function called, just increase its sequence #
+	order the ranks by sequence #
+	do 2 passes, first pass collect sequences of all nodes
+		use to determine the y coord for all nodes
+	next pass actually set the y to (height / y) * (step size * function pos)
+
+class view
+	see call/graph tree as just class nodes talking
+	double click on class node to zoom in and see inner-methdods as a call graph
+	the first and last rank are for nodes calling in/out (the same node could be in the 1st and last rank)
+
+---
+
+instances bottom panel tabC:\Main\git\XRay\Library\TimingForm.cs
+	option to show just methods and/or fields
+	mouse over field should get value for first 10 instances
+		useful when you see something talking to a field and you want to see what its set to
+
+	when instance init'd
+	this pointer passed to xray
+	instance logged af active with 'this' pointer weakly bound
+	option in xray to just show active instances
+	instance details dialog
+		tree/grid, object members on y, instance values along x, max 100, let user page prev/next
+
+	list old to new
+	instance object records # of objects created, # destroyed, # alive right now
+
+	flash the class green when constructed, red when destroyed
+
+	could be debugger like with a bottom panel
+
+click node should highlight connected nodes/edges force labels ON
+
+---
+
+recalc values every second if view is in calls/function timing
+
+option to show dependencies direct/all
+
+---
+
+history
+
+
+class dependency graph
+	works with structs?
+
+	test - load 2 compilcated modules (ilspy) and verify dependencies all go 1 direction
+
+	use to refactor de-ops into core/ui/sim components
+	easier to see dependencies and reactor the easy stuff piece wise
+	click on class should show exactly what member variables/parameters/local functions are dependent
+
+	an interactive system would be able to drag drop components between modules as long as there were no internal dependencies
+	dependencies between modules should be easy to see/graph as well - subgraphs for each module
+		maybe test with dragonly dll hell

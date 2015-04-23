@@ -1,0 +1,26 @@
+﻿
+
+NuGet
+	Location: D:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\Microsoft Corporation\NuGet Package Manager\2.0.30619.9119
+	Notes: All files are signed, XRay replaced to remove sigs
+	Problem: Replaced PublicKeyTokens in NuGet.Tools.pkgdef with null because no longer signed, but still giving an error while loading
+
+Expression Encoder
+	Licensing dll has a field type - method System.Void *() - that isn't parsed correctly
+	I think 'method' might be a field attribute and maybe a cecil bug - investigate
+
+deOps - problem expanding dictionaries keyvalue elements in some classes
+openTK - gives an assembly reference not found on compile
+xlibrary - method dependency graph to see if ViewModel can be refactored
+
+banshee
+	Need to start xray in admin mode
+	Need to run nereid in admin mode
+	only nereid.exe seems to run, other apps have this problem
+		A call to PInvoke function 'XRay.Banshee.Core!Banshee.I18n.Catalog::gettext' has unbalanced the stack. 
+		This is likely because the managed PInvoke signature does not match the unmanaged target signature. 
+		Check that the calling convention and parameters of the PInvoke signature match the target unmanaged signature.
+	
+windows 8
+	use scanner, see what's out there
+
