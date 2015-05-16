@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ShareX.ScreenCaptureLib
@@ -39,7 +40,7 @@ namespace ShareX.ScreenCaptureLib
 
         #region Screen color picker
 
-        public bool OneClickMode { get; set; }
+        public bool ScreenColorPickerMode { get; set; }
 
         private Bitmap bmpSurfaceImage;
 
@@ -76,7 +77,7 @@ namespace ShareX.ScreenCaptureLib
 
         private void RectangleRegion_MouseDown(object sender, MouseEventArgs e)
         {
-            if (OneClickMode && e.Button == MouseButtons.Left)
+            if (ScreenColorPickerMode && e.Button == MouseButtons.Left)
             {
                 CurrentPosition = e.Location;
                 Close(SurfaceResult.Region);
@@ -87,6 +88,9 @@ namespace ShareX.ScreenCaptureLib
         {
             switch (e.KeyData)
             {
+                case Keys.F1:
+                    Config.ShowTips = !Config.ShowTips;
+                    break;
                 case Keys.I:
                     Config.ShowInfo = !Config.ShowInfo;
                     break;
@@ -104,21 +108,20 @@ namespace ShareX.ScreenCaptureLib
 
         private void CopyAreaInfo()
         {
+            string clipboardText;
+
             if (AreaManager.IsCurrentAreaValid)
             {
-                string clipboardText;
-
-                if (RulerMode)
-                {
-                    clipboardText = GetRulerText(AreaManager.CurrentArea);
-                }
-                else
-                {
-                    clipboardText = GetAreaText(AreaManager.CurrentArea);
-                }
-
+                clipboardText = GetAreaText(AreaManager.CurrentArea);
                 ClipboardHelpers.CopyText(clipboardText);
             }
+            else
+            {
+                CurrentPosition = InputManager.MousePosition;
+                clipboardText = string.Format("X: {0} Y: {1}", CurrentPosition.X, CurrentPosition.Y);
+            }
+
+            ClipboardHelpers.CopyText(clipboardText);
         }
 
         private void RectangleRegion_MouseWheel(object sender, MouseEventArgs e)
@@ -170,7 +173,7 @@ namespace ShareX.ScreenCaptureLib
                 }
             }
 
-            if (OneClickMode)
+            if (ScreenColorPickerMode)
             {
                 bmpSurfaceImage = new Bitmap(SurfaceImage);
             }
@@ -204,6 +207,7 @@ namespace ShareX.ScreenCaptureLib
 
                     g.DrawPath(borderPen, regionDrawPath);
 
+                    /*
                     if (areas.Count > 1)
                     {
                         Rectangle totalArea = AreaManager.CombineAreas();
@@ -215,6 +219,7 @@ namespace ShareX.ScreenCaptureLib
                                 totalArea.Width, totalArea.Height), new PointF(totalArea.X + 5, totalArea.Y - 25), textFont, Color.White, Color.Black);
                         }
                     }
+                    */
                 }
 
                 if (AreaManager.IsCurrentHoverAreaValid)
@@ -252,22 +257,16 @@ namespace ShareX.ScreenCaptureLib
                     {
                         if (area.IsValid())
                         {
-                            if (RulerMode)
-                            {
-                                ImageHelpers.DrawTextWithOutline(g, GetRulerText(area), new PointF(area.X + 15, area.Y + 15), textFont, Color.White, Color.Black);
-                            }
-                            else
-                            {
-                                ImageHelpers.DrawTextWithOutline(g, GetAreaText(area), new PointF(area.X + 5, area.Y + 5), textFont, Color.White, Color.Black);
-                            }
+                            string areaText = GetAreaText(area);
+                            DrawAreaText(g, areaText, area);
                         }
                     }
                 }
             }
 
-            if (OneClickMode)
+            if (Config.ShowTips)
             {
-                DrawScreenColorPickerInfo(g);
+                DrawTips(g, 10, 10);
             }
 
             if (Config.ShowMagnifier)
@@ -281,38 +280,138 @@ namespace ShareX.ScreenCaptureLib
             }
         }
 
-        private string GetRulerText(Rectangle area)
+        private void DrawInfoText(Graphics g, string text, Rectangle rect, int padding)
         {
-            Point endPos = new Point(area.X + area.Width - 1, area.Y + area.Height - 1);
-            return string.Format(Resources.RectangleRegion_GetRulerText_Ruler_info, area.X, area.Y, endPos.X, endPos.Y,
-                area.Width, area.Height, MathHelpers.Distance(area.Location, endPos), MathHelpers.LookAtDegree(area.Location, endPos));
+            g.FillRectangle(textBackgroundBrush, rect.Offset(-2));
+            g.DrawRectangleProper(textBackgroundPenBlack, rect.Offset(-1));
+            g.DrawRectangleProper(textBackgroundPenWhite, rect);
+
+            ImageHelpers.DrawTextWithShadow(g, text, rect.Offset(-padding).Location, infoFont, Brushes.White, Brushes.Black);
+        }
+
+        private void DrawAreaText(Graphics g, string text, Rectangle area)
+        {
+            int offset = 5;
+            int backgroundPadding = 3;
+            Size textSize = g.MeasureString(text, infoFont).ToSize();
+            Point textPos;
+
+            if (area.Y - offset - textSize.Height - backgroundPadding * 2 < ScreenRectangle0Based.Y)
+            {
+                textPos = new Point(area.X + offset + backgroundPadding, area.Y + offset + backgroundPadding);
+            }
+            else
+            {
+                textPos = new Point(area.X + backgroundPadding, area.Y - offset - backgroundPadding - textSize.Height);
+            }
+
+            Rectangle backgroundRect = new Rectangle(textPos.X - backgroundPadding, textPos.Y - backgroundPadding, textSize.Width + backgroundPadding * 2, textSize.Height + backgroundPadding * 2);
+
+            DrawInfoText(g, text, backgroundRect, backgroundPadding);
+        }
+
+        private void DrawTips(Graphics g, int offset, int padding)
+        {
+            StringBuilder sb = new StringBuilder();
+            WriteTips(sb);
+            string tipText = sb.ToString().Trim();
+
+            Size textSize = g.MeasureString(tipText, infoFont).ToSize();
+            int rectWidth = textSize.Width + padding * 2 + 2;
+            int rectHeight = textSize.Height + padding * 2;
+            Rectangle primaryScreenBounds = CaptureHelpers.GetPrimaryScreenBounds0Based();
+            Rectangle textRectangle = new Rectangle(primaryScreenBounds.X + primaryScreenBounds.Width - rectWidth - offset, primaryScreenBounds.Y + offset, rectWidth, rectHeight);
+
+            if (textRectangle.Offset(10).Contains(InputManager.MousePosition0Based))
+            {
+                textRectangle.Y = primaryScreenBounds.Height - rectHeight - offset;
+            }
+
+            DrawInfoText(g, tipText, textRectangle, padding);
+        }
+
+        protected virtual void WriteTips(StringBuilder sb)
+        {
+            sb.AppendLine("[F1] Hide tips");
+            sb.AppendLine();
+
+            if (AreaManager.IsCreating)
+            {
+                sb.AppendLine("[Right click] Cancel region selection");
+                sb.AppendLine("[Esc] Cancel capture");
+            }
+            else
+            {
+                sb.AppendLine("[Hold Left click] Start region selection");
+                sb.AppendLine("[Right click] [Esc] Cancel capture");
+            }
+
+            if (!Config.QuickCrop && AreaManager.Areas.Count > 0)
+            {
+                sb.AppendLine("[Double Left click] [Enter] Capture regions");
+            }
+
+            sb.AppendLine();
+
+            if (!Config.QuickCrop && !AreaManager.IsCreating && AreaManager.IsCurrentAreaValid)
+            {
+                sb.AppendLine(string.Format("[Arrow keys] Resize selected region from {0}", AreaManager.ResizeManager.IsBottomRightResizing ? "bottom right" : "top left"));
+                sb.AppendLine(string.Format("[Tab] Swap resize anchor to {0}", AreaManager.ResizeManager.IsBottomRightResizing ? "top left" : "bottom right"));
+                sb.AppendLine("[Hold Shift] Move selected region instead resizing");
+                sb.AppendLine("[Hold Ctrl] Resize / Move faster");
+                sb.AppendLine("[Hold Left click on selection] Move region");
+                sb.AppendLine("[Right click on selection] [Delete] Remove region");
+            }
+            else
+            {
+                sb.AppendLine("[Arrow keys] Move cursor position");
+                sb.AppendLine("[Ctrl + Arrow keys] Move cursor position faster");
+            }
+
+            if (AreaManager.IsCreating)
+            {
+                sb.AppendLine("[Hold Shift] Proportional resizing");
+            }
+
+            if (AreaManager.IsCurrentAreaValid)
+            {
+                sb.AppendLine("[Ctrl + C] Copy position and size");
+            }
+
+            sb.AppendLine();
+
+            sb.AppendLine("[Space] Fullscreen capture");
+            sb.AppendLine("[1, 2, 3 ... 0] Monitor capture");
+            sb.AppendLine("[~] Active monitor capture");
+
+            sb.AppendLine();
+
+            if (Config.QuickCrop)
+            {
+                sb.AppendLine("[Q] Multi region mode");
+            }
+            else
+            {
+                sb.AppendLine("[Q] Quick capture mode");
+            }
+
+            sb.AppendLine("[Mouse wheel] Change magnifier pixel count");
+            sb.AppendLine("[Ctrl + Mouse wheel] Change magnifier pixel size");
+            sb.AppendLine(string.Format("[I] {0} position and size info", Config.ShowInfo ? "Hide" : "Show"));
+            sb.AppendLine(string.Format("[M] {0} magnifier", Config.ShowMagnifier ? "Hide" : "Show"));
+            sb.AppendLine(string.Format("[C] {0} screen wide crosshair", Config.ShowCrosshair ? "Hide" : "Show"));
         }
 
         private string GetAreaText(Rectangle area)
         {
-            return string.Format(Resources.RectangleRegion_GetAreaText_Area, area.X, area.Y, area.Width, area.Height);
-        }
-
-        private void DrawScreenColorPickerInfo(Graphics g)
-        {
-            CurrentPosition = InputManager.MousePosition0Based;
-
-            if (Config.ShowInfo)
+            if (RulerMode)
             {
-                Color color = CurrentColor;
-
-                using (Brush brush = new SolidBrush(color))
-                {
-                    Rectangle colorBox = new Rectangle(CurrentPosition.X + 5, CurrentPosition.Y + 5, 20, 20);
-                    g.FillRectangle(brush, colorBox);
-                    g.DrawRectangleProper(Pens.Black, colorBox);
-                }
-
-                string infoText = string.Format(Resources.RectangleRegion_GetColorPickerText, color.R, color.G, color.B, ColorHelpers.ColorToHex(color),
-                    CurrentPosition.X, CurrentPosition.Y);
-
-                ImageHelpers.DrawTextWithOutline(g, infoText, new PointF(CurrentPosition.X + 25, CurrentPosition.Y + 5), textFont, Color.White, Color.Black);
+                Point endPos = new Point(area.Right - 1, area.Bottom - 1);
+                return string.Format(Resources.RectangleRegion_GetRulerText_Ruler_info, area.X, area.Y, endPos.X, endPos.Y,
+                    area.Width, area.Height, MathHelpers.Distance(area.Location, endPos), MathHelpers.LookAtDegree(area.Location, endPos));
             }
+
+            return string.Format(Resources.RectangleRegion_GetAreaText_Area, area.X, area.Y, area.Width, area.Height);
         }
 
         private void DrawCrosshair(Graphics g)
@@ -353,11 +452,28 @@ namespace ShareX.ScreenCaptureLib
         {
             Point mousePos = InputManager.MousePosition0Based;
             Rectangle currentScreenRect0Based = CaptureHelpers.ScreenToClient(Screen.FromPoint(InputManager.MousePosition).Bounds);
-            int offsetX = RulerMode ? 20 : 10, offsetY = RulerMode ? 20 : 10;
+            int offsetX = 10, offsetY = 10, infoTextOffset = 0, infoTextPadding = 3;
+            Rectangle infoTextRect = Rectangle.Empty;
+            string infoText = string.Empty;
 
-            if (Config.ShowInfo && ((AreaManager.IsCurrentAreaValid && AreaManager.CurrentArea.Location == mousePos) || OneClickMode))
+            if (Config.ShowInfo)
             {
-                offsetY = RulerMode ? 85 : 50;
+                infoTextOffset = 10;
+
+                CurrentPosition = InputManager.MousePosition;
+
+                if (ScreenColorPickerMode)
+                {
+                    Color color = CurrentColor;
+                    infoText = string.Format(Resources.RectangleRegion_GetColorPickerText, color.R, color.G, color.B, ColorHelpers.ColorToHex(color), CurrentPosition.X, CurrentPosition.Y);
+                }
+                else
+                {
+                    infoText = string.Format("X: {0} Y: {1}", CurrentPosition.X, CurrentPosition.Y);
+                }
+
+                Size textSize = g.MeasureString(infoText, infoFont).ToSize();
+                infoTextRect.Size = new Size(textSize.Width + infoTextPadding * 2, textSize.Height + infoTextPadding * 2);
             }
 
             using (Bitmap magnifier = Magnifier(SurfaceImage, mousePos, Config.MagnifierPixelCount, Config.MagnifierPixelCount, Config.MagnifierPixelSize))
@@ -371,9 +487,15 @@ namespace ShareX.ScreenCaptureLib
 
                 int y = mousePos.Y + offsetY;
 
-                if (y + magnifier.Height > currentScreenRect0Based.Bottom)
+                if (y + magnifier.Height + infoTextOffset + infoTextRect.Height > currentScreenRect0Based.Bottom)
                 {
-                    y = mousePos.Y - offsetY - magnifier.Height;
+                    y = mousePos.Y - offsetY - magnifier.Height - infoTextOffset - infoTextRect.Height;
+                }
+
+                if (Config.ShowInfo)
+                {
+                    infoTextRect.Location = new Point(x + (magnifier.Width / 2) - (infoTextRect.Width / 2), y + magnifier.Height + infoTextOffset);
+                    DrawInfoText(g, infoText, infoTextRect, 3);
                 }
 
                 g.SetHighQuality();
@@ -382,6 +504,7 @@ namespace ShareX.ScreenCaptureLib
                 {
                     brush.TranslateTransform(x, y);
                     g.FillEllipse(brush, x, y, magnifier.Width, magnifier.Height);
+                    g.DrawEllipse(Pens.White, x - 1, y - 1, magnifier.Width + 2, magnifier.Height + 2);
                     g.DrawEllipse(Pens.Black, x, y, magnifier.Width, magnifier.Height);
                 }
             }

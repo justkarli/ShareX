@@ -40,7 +40,9 @@ namespace ShareX.ScreenCaptureLib
         None,
         Close,
         Region,
-        Fullscreen
+        Fullscreen,
+        Monitor,
+        ActiveMonitor
     }
 
     internal enum NodePosition

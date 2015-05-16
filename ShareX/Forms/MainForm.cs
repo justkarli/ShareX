@@ -202,13 +202,15 @@ namespace ShareX
 
             StringBuilder sb = new StringBuilder(Resources.MainForm_UpdateMainFormTip_You_can_drag_and_drop_files_to_this_window_);
 
-            if (Program.HotkeysConfig.Hotkeys.Count > 0)
+            List<HotkeySettings> hotkeys = Program.HotkeysConfig.Hotkeys.Where(x => x.HotkeyInfo.IsValidHotkey).ToList();
+
+            if (hotkeys.Count > 0)
             {
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine(Resources.MainForm_UpdateMainFormTip_Currently_configured_hotkeys_);
 
-                foreach (HotkeySettings hotkey in Program.HotkeysConfig.Hotkeys.Where(x => x.HotkeyInfo.IsValidHotkey))
+                foreach (HotkeySettings hotkey in hotkeys)
                 {
                     sb.AppendFormat("{0}  |  {1}\r\n", hotkey.HotkeyInfo, hotkey.TaskSettings);
                 }
@@ -1148,11 +1150,14 @@ namespace ShareX
                     uim.OpenFile();
                     break;
                 case Keys.Control | Keys.X:
-                    uim.CopyURL();
+                    uim.TryCopy();
                     RemoveSelectedItems();
                     break;
                 case Keys.Control | Keys.C:
-                    uim.CopyURL();
+                    uim.TryCopy();
+                    break;
+                case Keys.Control | Keys.Shift | Keys.C:
+                    uim.CopyFilePath();
                     break;
                 case Keys.Control | Keys.V:
                     UploadManager.ClipboardUploadMainWindow();
@@ -1372,7 +1377,7 @@ namespace ShareX
             if (MessageBox.Show(Resources.MainForm_tsmiDeleteSelectedFile_Click_Do_you_really_want_to_delete_this_file_,
                 "ShareX - " + Resources.MainForm_tsmiDeleteSelectedFile_Click_File_delete_confirmation, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                uim.DeleteFile();
+                uim.DeleteFiles();
                 RemoveSelectedItems();
             }
         }
@@ -1547,6 +1552,9 @@ namespace ShareX
                 case HotkeyType.FreeHandRegion:
                     CaptureScreenshot(CaptureType.Freehand, safeTaskSettings, false);
                     break;
+                case HotkeyType.CustomRegion:
+                    CaptureScreenshot(CaptureType.CustomRegion, safeTaskSettings, false);
+                    break;
                 case HotkeyType.LastRegion:
                     CaptureScreenshot(CaptureType.LastRegion, safeTaskSettings, false);
                     break;
@@ -1628,6 +1636,9 @@ namespace ShareX
                 case CaptureType.Polygon:
                 case CaptureType.Freehand:
                     CaptureRegion(captureType, taskSettings, autoHideForm);
+                    break;
+                case CaptureType.CustomRegion:
+                    CaptureCustomRegion(taskSettings, autoHideForm);
                     break;
                 case CaptureType.LastRegion:
                     CaptureLastRegion(taskSettings, autoHideForm);
@@ -1754,6 +1765,17 @@ namespace ShareX
             }, CaptureType.ActiveWindow, taskSettings, autoHideForm);
         }
 
+        private void CaptureCustomRegion(TaskSettings taskSettings, bool autoHideForm)
+        {
+            DoCapture(() =>
+            {
+                Rectangle regionBounds = taskSettings.CaptureSettings.CaptureCustomRegion;
+                Image img = Screenshot.CaptureRectangle(regionBounds);
+
+                return img;
+            }, CaptureType.CustomRegion, taskSettings, autoHideForm);
+        }
+
         private void CaptureWindow(IntPtr handle, TaskSettings taskSettings = null, bool autoHideForm = true)
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
@@ -1822,19 +1844,45 @@ namespace ShareX
 
                 try
                 {
-                    surface.Config = taskSettings.CaptureSettings.SurfaceOptions;
+                    surface.Config = taskSettings.TaskSettingsCaptureReference.SurfaceOptions;
                     surface.SurfaceImage = screenshot;
                     surface.Prepare();
                     surface.ShowDialog();
 
                     if (surface.Result == SurfaceResult.Region)
                     {
-                        img = surface.GetRegionImage();
-                        screenshot.Dispose();
+                        using (screenshot)
+                        {
+                            img = surface.GetRegionImage();
+                        }
                     }
                     else if (surface.Result == SurfaceResult.Fullscreen)
                     {
                         img = screenshot;
+                    }
+                    else if (surface.Result == SurfaceResult.Monitor)
+                    {
+                        Screen[] screens = Screen.AllScreens;
+
+                        if (surface.MonitorIndex < screens.Length)
+                        {
+                            Screen screen = screens[surface.MonitorIndex];
+                            Rectangle screenRect = CaptureHelpers.ScreenToClient(screen.Bounds);
+
+                            using (screenshot)
+                            {
+                                img = ImageHelpers.CropImage(screenshot, screenRect);
+                            }
+                        }
+                    }
+                    else if (surface.Result == SurfaceResult.ActiveMonitor)
+                    {
+                        Rectangle activeScreenRect = CaptureHelpers.GetActiveScreenBounds0Based();
+
+                        using (screenshot)
+                        {
+                            img = ImageHelpers.CropImage(screenshot, activeScreenRect);
+                        }
                     }
 
                     if (img != null)
@@ -1969,7 +2017,7 @@ namespace ShareX
                         {
                             using (Image screenshot = Screenshot.CaptureFullscreen())
                             {
-                                return ImageHelpers.CropImage(screenshot, RectangleLight.LastSelectionRectangle0Based);
+                                return ImageHelpers.CropImage(screenshot, RectangleTransparent.LastSelectionRectangle0Based);
                             }
                         }, CaptureType.LastRegion, taskSettings, autoHideForm);
                     }

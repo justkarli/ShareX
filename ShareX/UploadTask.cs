@@ -706,7 +706,11 @@ namespace ShareX
                     break;
                 case ImageDestination.Twitter:
                     OAuthInfo twitterOAuth = Program.UploadersConfig.TwitterOAuthInfoList.ReturnIfValidIndex(Program.UploadersConfig.TwitterSelectedAccount);
-                    imageUploader = new Twitter(twitterOAuth);
+                    imageUploader = new Twitter(twitterOAuth)
+                    {
+                        SkipMessageBox = Program.UploadersConfig.TwitterSkipMessageBox,
+                        DefaultMessage = Program.UploadersConfig.TwitterDefaultMessage ?? string.Empty
+                    };
                     break;
                 case ImageDestination.Chevereto:
                     imageUploader = new Chevereto(Program.UploadersConfig.CheveretoWebsite, Program.UploadersConfig.CheveretoAPIKey)
@@ -1115,14 +1119,29 @@ namespace ShareX
                         {
                             OAuthInfo twitterOAuth = Program.UploadersConfig.TwitterOAuthInfoList[Program.UploadersConfig.TwitterSelectedAccount];
 
-                            using (TwitterTweetForm twitter = new TwitterTweetForm(twitterOAuth, url))
+                            if (Program.UploadersConfig.TwitterSkipMessageBox)
                             {
-                                twitter.ShowDialog();
+                                try
+                                {
+                                    new Twitter(twitterOAuth).TweetMessage(url);
+                                }
+                                catch (Exception ex)
+                                {
+                                    DebugHelper.WriteException(ex);
+                                }
+                            }
+                            else
+                            {
+                                using (TwitterTweetForm twitter = new TwitterTweetForm(twitterOAuth, url))
+                                {
+                                    twitter.ShowDialog();
+                                }
                             }
                         }
                         else
                         {
-                            URLHelpers.OpenURL("https://twitter.com/intent/tweet?text=" + encodedUrl);
+                            //URLHelpers.OpenURL("https://twitter.com/intent/tweet?text=" + encodedUrl);
+                            MessageBox.Show(Resources.TaskHelpers_TweetMessage_Unable_to_find_valid_Twitter_account_, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         break;
                     case URLSharingServices.Facebook:

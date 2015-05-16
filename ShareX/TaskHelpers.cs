@@ -325,6 +325,7 @@ namespace ShareX
             using (RectangleRegion surface = new RectangleRegion())
             {
                 surface.Config = taskSettings.CaptureSettings.SurfaceOptions;
+                surface.Config.ShowTips = false;
                 surface.Config.QuickCrop = true;
                 surface.Config.ForceWindowCapture = true;
                 surface.Prepare();
@@ -343,6 +344,22 @@ namespace ShareX
                     rect = CaptureHelpers.GetScreenBounds();
                     return true;
                 }
+                else if (surface.Result == SurfaceResult.Monitor)
+                {
+                    Screen[] screens = Screen.AllScreens;
+
+                    if (surface.MonitorIndex < screens.Length)
+                    {
+                        Screen screen = screens[surface.MonitorIndex];
+                        rect = screen.Bounds;
+                        return true;
+                    }
+                }
+                else if (surface.Result == SurfaceResult.ActiveMonitor)
+                {
+                    rect = CaptureHelpers.GetActiveScreenBounds();
+                    return true;
+                }
             }
 
             rect = Rectangle.Empty;
@@ -353,7 +370,11 @@ namespace ShareX
         {
             using (RectangleRegion surface = new RectangleRegion())
             {
-                surface.OneClickMode = true;
+                surface.ScreenColorPickerMode = true;
+                surface.Config.UseDimming = false;
+                surface.Config.ShowInfo = true;
+                surface.Config.ShowMagnifier = true;
+                surface.Config.ShowTips = false;
                 surface.Prepare();
                 surface.ShowDialog();
 
@@ -549,6 +570,7 @@ namespace ShareX
             using (RectangleRegion surface = new RectangleRegion())
             {
                 surface.RulerMode = true;
+                surface.Config.ShowTips = false;
                 surface.Config.QuickCrop = false;
                 surface.Config.ShowInfo = true;
                 surface.AreaManager.MinimumSize = 3;
@@ -630,7 +652,14 @@ namespace ShareX
 
         public static void OpenDNSChanger()
         {
-            RunShareXAsAdmin("-dnschanger");
+            if (Helpers.IsAdministrator())
+            {
+                new DNSChangerForm().Show();
+            }
+            else
+            {
+                RunShareXAsAdmin("-dnschanger");
+            }
         }
 
         public static void RunShareXAsAdmin(string arguments)
@@ -650,36 +679,58 @@ namespace ShareX
             new QRCodeForm().Show();
         }
 
+        public static void OpenFTPClient()
+        {
+            if (Program.UploadersConfig != null && Program.UploadersConfig.FTPAccountList != null)
+            {
+                FTPAccount account = Program.UploadersConfig.FTPAccountList.ReturnIfValidIndex(Program.UploadersConfig.FTPSelectedImage);
+
+                if (account != null)
+                {
+                    if (account.Protocol == FTPProtocol.FTP || account.Protocol == FTPProtocol.FTPS)
+                    {
+                        new FTPClientForm(account).Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show(Resources.TaskHelpers_OpenFTPClient_FTP_client_only_supports_FTP_or_FTPS_, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    return;
+                }
+            }
+
+            MessageBox.Show(Resources.TaskHelpers_OpenFTPClient_Unable_to_find_valid_FTP_account_, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         public static void TweetMessage()
         {
-            TaskEx.Run(() =>
+            if (Program.UploadersConfig != null && Program.UploadersConfig.TwitterOAuthInfoList != null)
             {
                 OAuthInfo twitterOAuth = Program.UploadersConfig.TwitterOAuthInfoList.ReturnIfValidIndex(Program.UploadersConfig.TwitterSelectedAccount);
 
-                if (twitterOAuth != null)
+                if (twitterOAuth != null && OAuthInfo.CheckOAuth(twitterOAuth))
                 {
-                    using (TwitterTweetForm twitter = new TwitterTweetForm(twitterOAuth))
+                    TaskEx.Run(() =>
                     {
-                        if (twitter.ShowDialog() == DialogResult.OK && twitter.IsTweetSent)
+                        using (TwitterTweetForm twitter = new TwitterTweetForm(twitterOAuth))
                         {
-                            if (Program.MainForm.niTray.Visible)
+                            if (twitter.ShowDialog() == DialogResult.OK && twitter.IsTweetSent)
                             {
-                                Program.MainForm.niTray.Tag = null;
-                                Program.MainForm.niTray.ShowBalloonTip(5000, "ShareX - Twitter", Resources.TaskHelpers_TweetMessage_Tweet_successfully_sent_, ToolTipIcon.Info);
+                                if (Program.MainForm.niTray.Visible)
+                                {
+                                    Program.MainForm.niTray.Tag = null;
+                                    Program.MainForm.niTray.ShowBalloonTip(5000, "ShareX - Twitter", Resources.TaskHelpers_TweetMessage_Tweet_successfully_sent_, ToolTipIcon.Info);
+                                }
                             }
                         }
-                    }
-                }
-            });
-        }
+                    });
 
-        public static void OpenFTPClient()
-        {
-            if (Program.UploadersConfig != null && Program.UploadersConfig.FTPAccountList.IsValidIndex(Program.UploadersConfig.FTPSelectedImage))
-            {
-                FTPAccount account = Program.UploadersConfig.FTPAccountList[Program.UploadersConfig.FTPSelectedImage];
-                new FTPClientForm(account).Show();
+                    return;
+                }
             }
+
+            MessageBox.Show(Resources.TaskHelpers_TweetMessage_Unable_to_find_valid_Twitter_account_, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static EDataType FindDataType(string filePath, TaskSettings taskSettings)

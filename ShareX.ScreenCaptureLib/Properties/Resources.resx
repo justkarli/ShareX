@@ -143,8 +143,7 @@
     <value>Browse for ffmpeg.exe</value>
   </data>
   <data name="RectangleRegion_GetAreaText_Area" xml:space="preserve">
-    <value>X: {0} / Y: {1}
-W: {2} / H: {3}</value>
+    <value>X: {0} Y: {1} W: {2} H: {3}</value>
   </data>
   <data name="RectangleRegion_GetRulerText_Ruler_info" xml:space="preserve">
     <value>X: {0} / Y: {1} / X2: {2} / Y2: {3}
@@ -164,10 +163,14 @@ Distance: {6:0.00} px / Angle: {7:0.00}°</value>
     <value>Ctrl: Drawing mode ░ Space: Fullscreen capture</value>
   </data>
   <data name="RectangleRegion_GetColorPickerText" xml:space="preserve">
-    <value>R: {0}, G: {1}, B: {2}, Hex: {3}
-X: {4}, Y: {5}</value>
+    <value>RGB: {0}, {1}, {2}
+Hex: {3}
+X: {4} Y: {5}</value>
   <comment>@Invariant</comment></data>
   <data name="RectangleTransparent_RectangleTransparent_Rectangle_capture_transparent" xml:space="preserve">
     <value>Rectangle capture transparent</value>
+  </data>
+  <data name="ScreenRegion_Name_Monitor_0___X__1__Y__2__Width__3__Height__4_" xml:space="preserve">
+    <value>Monitor {0} (X:{1} Y:{2} Width:{3} Height:{4})</value>
   </data>
 </root>

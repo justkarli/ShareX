@@ -37,6 +37,9 @@ namespace ShareX.ScreenCaptureLib
         [DefaultValue(true), Description("Show coordinate and size information.")]
         public bool ShowInfo { get; set; }
 
+        [DefaultValue(true), Description("Show hotkeys/tips.")]
+        public bool ShowTips { get; set; }
+
         [DefaultValue(true), Description("Show magnifier.")]
         public bool ShowMagnifier { get; set; }
 
@@ -46,10 +49,10 @@ namespace ShareX.ScreenCaptureLib
         [DefaultValue(10), Description("Size of pixels in magnifier.")]
         public int MagnifierPixelSize { get; set; }
 
-        [DefaultValue(true), Description("Show screen wide crosshair.")]
+        [DefaultValue(false), Description("Show screen wide crosshair.")]
         public bool ShowCrosshair { get; set; }
 
-        [DefaultValue(true), Description("Cropping move will dim the screen during selection. Can be intensive at high resolutions.")]
+        [DefaultValue(true), Description("Capturing screen will dim the screen outside selected area. This may impact on the startup time of the capture process at high resolutions.")]
         public bool UseDimming { get; set; }
 
         [DefaultValue(false), Description("Show frames per second.")]

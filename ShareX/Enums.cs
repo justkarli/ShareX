@@ -31,12 +31,14 @@ namespace ShareX
     public enum SupportedLanguage
     {
         Automatic, // Localized
+        [Description("Nederlands (Dutch)")]
+        Dutch,
         [Description("English")]
         English,
-        [Description("Deutsch (German)")]
-        German,
         [Description("Français (French)")]
         French,
+        [Description("Deutsch (German)")]
+        German,
         [Description("Magyar (Hungarian)")]
         Hungarian,
         [Description("한국어 (Korean)")]
@@ -124,6 +126,7 @@ namespace ShareX
         Diamond,
         Polygon,
         Freehand,
+        CustomRegion,
         LastRegion
     }
 
@@ -151,6 +154,7 @@ namespace ShareX
         DiamondRegion,
         PolygonRegion,
         FreeHandRegion,
+        CustomRegion,
         LastRegion,
         ScreenRecorder,
         StartScreenRecorder,

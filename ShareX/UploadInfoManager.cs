@@ -143,7 +143,7 @@ namespace ShareX
                 {
                     URLHelpers.OpenURL(SelectedItem.Info.Result.URL);
                 }
-                else if (SelectedItem.IsFileExist)
+                else if (SelectedItem.IsFilePathValid)
                 {
                     URLHelpers.OpenURL(SelectedItem.Info.FilePath);
                 }
@@ -254,6 +254,25 @@ namespace ShareX
             if (!string.IsNullOrEmpty(format) && IsItemSelected) CopyTexts(SelectedItems.Where(x => x.IsURLExist).Select(x => parser.Parse(x.Info, format)));
         }
 
+        public void TryCopy()
+        {
+            if (IsItemSelected)
+            {
+                if (SelectedItem.IsShortenedURLExist)
+                {
+                    CopyTexts(SelectedItems.Where(x => x.IsShortenedURLExist).Select(x => x.Info.Result.ShortenedURL));
+                }
+                else if (SelectedItem.IsURLExist)
+                {
+                    CopyTexts(SelectedItems.Where(x => x.IsURLExist).Select(x => x.Info.Result.URL));
+                }
+                else if (SelectedItem.IsFilePathValid)
+                {
+                    CopyTexts(SelectedItems.Where(x => x.IsFilePathValid).Select(x => x.Info.FilePath));
+                }
+            }
+        }
+
         #endregion Copy
 
         #region Other
@@ -289,9 +308,15 @@ namespace ShareX
             if (IsItemSelected && SelectedItem.IsImageFile) TaskHelpers.OpenImageEditor(SelectedItem.Info.FilePath);
         }
 
-        public void DeleteFile()
+        public void DeleteFiles()
         {
-            if (IsItemSelected && SelectedItem.IsFileExist) FileSystem.DeleteFile(SelectedItem.Info.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            if (IsItemSelected)
+            {
+                foreach (string filepath in SelectedItems.Where(x => x.IsFileExist).Select(x => x.Info.FilePath))
+                {
+                    FileSystem.DeleteFile(filepath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                }
+            }
         }
 
         public void ShortenURL(UrlShortenerType urlShortener)

@@ -45,14 +45,15 @@ namespace ShareX.ScreenCaptureLib
         public Rectangle ScreenRectangle { get; private set; }
         public Rectangle ScreenRectangle0Based { get; private set; }
         public SurfaceResult Result { get; private set; }
+        public int MonitorIndex { get; private set; }
 
         protected List<DrawableObject> DrawableObjects { get; set; }
 
         protected TextureBrush darkBackgroundBrush, lightBackgroundBrush;
         protected GraphicsPath regionFillPath, regionDrawPath;
-        protected Pen borderPen, borderDotPen;
-        protected Brush nodeBackgroundBrush;
-        protected Font textFont;
+        protected Pen borderPen, borderDotPen, textBackgroundPenWhite, textBackgroundPenBlack;
+        protected Brush nodeBackgroundBrush, textBackgroundBrush;
+        protected Font textFont, infoFont;
         protected Stopwatch timer;
         protected int frameCount;
 
@@ -78,7 +79,11 @@ namespace ShareX.ScreenCaptureLib
             borderDotPen = new Pen(Color.White);
             borderDotPen.DashPattern = new float[] { 5, 5 };
             nodeBackgroundBrush = new SolidBrush(Color.White);
-            textFont = new Font("Arial", 17, FontStyle.Bold);
+            textFont = new Font("Verdana", 16, FontStyle.Bold);
+            infoFont = new Font("Verdana", 9);
+            textBackgroundBrush = new SolidBrush(Color.FromArgb(75, Color.Black));
+            textBackgroundPenWhite = new Pen(Color.FromArgb(50, Color.White));
+            textBackgroundPenBlack = new Pen(Color.FromArgb(150, Color.Black));
         }
 
         private void InitializeComponent()
@@ -109,6 +114,7 @@ namespace ShareX.ScreenCaptureLib
 
             if (Config.UseDimming)
             {
+                /*
                 using (Image darkSurfaceImage = ColorMatrixManager.Contrast(0.9f).Apply(SurfaceImage))
                 {
                     darkBackgroundBrush = new TextureBrush(darkSurfaceImage) { WrapMode = WrapMode.Clamp };
@@ -118,10 +124,23 @@ namespace ShareX.ScreenCaptureLib
                 {
                     lightBackgroundBrush = new TextureBrush(lightSurfaceImage) { WrapMode = WrapMode.Clamp };
                 }
+                */
+
+                using (Bitmap darkBackground = (Bitmap)SurfaceImage.Clone())
+                using (Graphics g = Graphics.FromImage(darkBackground))
+                {
+                    using (Brush brush = new SolidBrush(Color.FromArgb(50, Color.Black)))
+                    {
+                        g.FillRectangle(brush, 0, 0, darkBackground.Width, darkBackground.Height);
+                    }
+
+                    darkBackgroundBrush = new TextureBrush(darkBackground) { WrapMode = WrapMode.Clamp };
+                    lightBackgroundBrush = new TextureBrush(SurfaceImage) { WrapMode = WrapMode.Clamp };
+                }
             }
             else
             {
-                darkBackgroundBrush = new TextureBrush(SurfaceImage);
+                darkBackgroundBrush = new TextureBrush(SurfaceImage) { WrapMode = WrapMode.Clamp };
             }
         }
 
@@ -132,6 +151,18 @@ namespace ShareX.ScreenCaptureLib
 
         private void Surface_KeyUp(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9)
+            {
+                MonitorKey(e.KeyCode - Keys.D0);
+                return;
+            }
+
+            if (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9)
+            {
+                MonitorKey(e.KeyCode - Keys.NumPad0);
+                return;
+            }
+
             switch (e.KeyCode)
             {
                 case Keys.Escape:
@@ -143,10 +174,27 @@ namespace ShareX.ScreenCaptureLib
                 case Keys.Enter:
                     Close(SurfaceResult.Region);
                     break;
+                case Keys.Oemtilde:
+                    Close(SurfaceResult.ActiveMonitor);
+                    break;
                 case Keys.Q:
                     Config.QuickCrop = !Config.QuickCrop;
                     break;
             }
+        }
+
+        private void MonitorKey(int index)
+        {
+            if (index == 0)
+            {
+                index = 10;
+            }
+
+            index--;
+
+            MonitorIndex = index;
+
+            Close(SurfaceResult.Monitor);
         }
 
         private void Surface_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -346,6 +394,10 @@ namespace ShareX.ScreenCaptureLib
             if (borderDotPen != null) borderDotPen.Dispose();
             if (nodeBackgroundBrush != null) nodeBackgroundBrush.Dispose();
             if (textFont != null) textFont.Dispose();
+            if (infoFont != null) infoFont.Dispose();
+            if (textBackgroundBrush != null) textBackgroundBrush.Dispose();
+            if (textBackgroundPenWhite != null) textBackgroundPenWhite.Dispose();
+            if (textBackgroundPenBlack != null) textBackgroundPenBlack.Dispose();
 
             if (regionFillPath != null)
             {

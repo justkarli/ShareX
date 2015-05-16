@@ -284,6 +284,7 @@ namespace ShareX
         public bool IsDelayScreenshot = false;
         public decimal DelayScreenshot = 2.0m;
         public bool CaptureAutoHideTaskbar = false;
+        public Rectangle CaptureCustomRegion = new Rectangle(0, 0, 0, 0);
 
         #endregion Capture / General
 

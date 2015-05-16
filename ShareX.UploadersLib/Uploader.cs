@@ -253,6 +253,20 @@ namespace ShareX.UploadersLib
             }
         }
 
+        protected NameValueCollection SendRequestStreamGetHeaders(string url, Stream stream, string contentType, NameValueCollection headers = null,
+            CookieCollection cookies = null, HttpMethod method = HttpMethod.POST)
+        {
+            using (HttpWebResponse response = GetResponse(url, stream, null, contentType, headers, cookies, method))
+            {
+                if (response != null)
+                {
+                    return response.Headers;
+                }
+
+                return new NameValueCollection();
+            }
+        }
+
         private HttpWebResponse SendRequestMultiPart(string url, Dictionary<string, string> arguments, NameValueCollection headers = null,
             CookieCollection cookies = null, HttpMethod method = HttpMethod.POST)
         {

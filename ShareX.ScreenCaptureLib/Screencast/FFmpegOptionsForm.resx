@@ -160,7 +160,7 @@
   </data>
   <data name="lblX264CRF.Text" xml:space="preserve">
     <value>CRF:</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;lblX264CRF.Name" xml:space="preserve">
     <value>lblX264CRF</value>
   </data>
@@ -236,35 +236,8 @@ If the output looks good, then try a higher value and if it looks bad then choos
   <data name="&gt;&gt;nudQscale.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="nudVPxCRF.Location" type="System.Drawing.Point, System.Drawing">
-    <value>48, 12</value>
-  </data>
-  <data name="nudVPxCRF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>48, 20</value>
-  </data>
-  <data name="nudVPxCRF.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="nudVPxCRF.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="nudVPxCRF.ToolTip" xml:space="preserve">
-    <value>CRF value can be from 4–63, and 10 is a good starting point. Lower values mean better quality.</value>
-  </data>
-  <data name="&gt;&gt;nudVPxCRF.Name" xml:space="preserve">
-    <value>nudVPxCRF</value>
-  </data>
-  <data name="&gt;&gt;nudVPxCRF.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;nudVPxCRF.Parent" xml:space="preserve">
-    <value>tpVpx</value>
-  </data>
-  <data name="&gt;&gt;nudVPxCRF.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="cbPreset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>152, 12</value>
+    <value>184, 12</value>
   </data>
   <data name="cbPreset.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 21</value>
@@ -423,7 +396,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
     <value>True</value>
   </data>
   <data name="lblPreset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>104, 16</value>
+    <value>112, 16</value>
   </data>
   <data name="lblPreset.Size" type="System.Drawing.Size, System.Drawing">
     <value>40, 13</value>
@@ -453,13 +426,13 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
     <value>8, 16</value>
   </data>
   <data name="lblQscale.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 13</value>
+    <value>80, 13</value>
   </data>
   <data name="lblQscale.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="lblQscale.Text" xml:space="preserve">
-    <value>Variable bit rate:</value>
+    <value>Variable bitrate:</value>
   </data>
   <data name="&gt;&gt;lblQscale.Name" xml:space="preserve">
     <value>lblQscale</value>
@@ -508,7 +481,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="btnFFmpegBrowse.Text" xml:space="preserve">
     <value>...</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;btnFFmpegBrowse.Name" xml:space="preserve">
     <value>btnFFmpegBrowse</value>
   </data>
@@ -553,7 +526,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="gbFFmpegExe.Text" xml:space="preserve">
     <value>ffmpeg.exe</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;gbFFmpegExe.Name" xml:space="preserve">
     <value>gbFFmpegExe</value>
   </data>
@@ -570,7 +543,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
     <value>True</value>
   </data>
   <data name="cbCustomCommands.Location" type="System.Drawing.Point, System.Drawing">
-    <value>280, 0</value>
+    <value>320, 0</value>
   </data>
   <data name="cbCustomCommands.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 17</value>
@@ -667,7 +640,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="btnFFmpegHelp.Text" xml:space="preserve">
     <value>?</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;btnFFmpegHelp.Name" xml:space="preserve">
     <value>btnFFmpegHelp</value>
   </data>
@@ -742,7 +715,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="tpX264.Text" xml:space="preserve">
     <value>x264</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;tpX264.Name" xml:space="preserve">
     <value>tpX264</value>
   </data>
@@ -755,32 +728,86 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   <data name="&gt;&gt;tpX264.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="lblVpxCRF.AutoSize" type="System.Boolean, mscorlib">
+  <data name="lblVP8BitrateK.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="lblVpxCRF.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 16</value>
+  <data name="lblVP8BitrateK.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="lblVpxCRF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 13</value>
+  <data name="lblVP8BitrateK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>172, 16</value>
   </data>
-  <data name="lblVpxCRF.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="lblVP8BitrateK.Size" type="System.Drawing.Size, System.Drawing">
+    <value>14, 13</value>
   </data>
-  <data name="lblVpxCRF.Text" xml:space="preserve">
-    <value>CRF:</value>
-  <comment>@Invariant</comment></data>
-  <data name="&gt;&gt;lblVpxCRF.Name" xml:space="preserve">
-    <value>lblVpxCRF</value>
+  <data name="lblVP8BitrateK.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="&gt;&gt;lblVpxCRF.Type" xml:space="preserve">
+  <data name="lblVP8BitrateK.Text" xml:space="preserve">
+    <value>K</value>
+  </data>
+  <data name="&gt;&gt;lblVP8BitrateK.Name" xml:space="preserve">
+    <value>lblVP8BitrateK</value>
+  </data>
+  <data name="&gt;&gt;lblVP8BitrateK.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblVpxCRF.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblVP8BitrateK.Parent" xml:space="preserve">
     <value>tpVpx</value>
   </data>
-  <data name="&gt;&gt;lblVpxCRF.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblVP8BitrateK.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="nudVP8Bitrate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>96, 12</value>
+  </data>
+  <data name="nudVP8Bitrate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 20</value>
+  </data>
+  <data name="nudVP8Bitrate.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
+  </data>
+  <data name="nudVP8Bitrate.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;nudVP8Bitrate.Name" xml:space="preserve">
+    <value>nudVP8Bitrate</value>
+  </data>
+  <data name="&gt;&gt;nudVP8Bitrate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nudVP8Bitrate.Parent" xml:space="preserve">
+    <value>tpVpx</value>
+  </data>
+  <data name="&gt;&gt;nudVP8Bitrate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblVP8Bitrate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblVP8Bitrate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="lblVP8Bitrate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 13</value>
+  </data>
+  <data name="lblVP8Bitrate.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblVP8Bitrate.Text" xml:space="preserve">
+    <value>Variable bitrate:</value>
+  </data>
+  <data name="&gt;&gt;lblVP8Bitrate.Name" xml:space="preserve">
+    <value>lblVP8Bitrate</value>
+  </data>
+  <data name="&gt;&gt;lblVP8Bitrate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblVP8Bitrate.Parent" xml:space="preserve">
+    <value>tpVpx</value>
+  </data>
+  <data name="&gt;&gt;lblVP8Bitrate.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="tpVpx.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
@@ -792,8 +819,8 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
     <value>2</value>
   </data>
   <data name="tpVpx.Text" xml:space="preserve">
-    <value>VP8</value>
-  <comment>@Invariant</comment></data>
+    <value>VP8 (WebM)</value>
+  </data>
   <data name="&gt;&gt;tpVpx.Name" xml:space="preserve">
     <value>tpVpx</value>
   </data>
@@ -817,7 +844,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="tpXvid.Text" xml:space="preserve">
     <value>Xvid</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;tpXvid.Name" xml:space="preserve">
     <value>tpXvid</value>
   </data>
@@ -852,7 +879,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
     <value>8</value>
   </data>
   <data name="btnTest.Location" type="System.Drawing.Point, System.Drawing">
-    <value>136, 340</value>
+    <value>176, 340</value>
   </data>
   <data name="btnTest.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 23</value>
@@ -876,7 +903,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
     <value>7</value>
   </data>
   <data name="btnCopyPreview.Location" type="System.Drawing.Point, System.Drawing">
-    <value>227, 340</value>
+    <value>267, 340</value>
   </data>
   <data name="btnCopyPreview.Size" type="System.Drawing.Size, System.Drawing">
     <value>53, 23</value>
@@ -940,7 +967,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="tpAAC.Text" xml:space="preserve">
     <value>AAC</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;tpAAC.Name" xml:space="preserve">
     <value>tpAAC</value>
   </data>
@@ -994,7 +1021,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="tpVorbis.Text" xml:space="preserve">
     <value>Vorbis</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;tpVorbis.Name" xml:space="preserve">
     <value>tpVorbis</value>
   </data>
@@ -1048,7 +1075,7 @@ Similarly, for constant quality encoding, you will simply save bitrate by choosi
   </data>
   <data name="tpMP3.Text" xml:space="preserve">
     <value>MP3</value>
-  <comment>@Invariant</comment></data>
+  </data>
   <data name="&gt;&gt;tpMP3.Name" xml:space="preserve">
     <value>tpMP3</value>
   </data>

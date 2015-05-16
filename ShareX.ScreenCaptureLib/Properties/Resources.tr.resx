@@ -151,8 +151,7 @@
     <value>Bit hızı: {0}k</value>
   </data>
   <data name="RectangleRegion_GetAreaText_Area" xml:space="preserve">
-    <value>X: {0} / Y: {1}
-G: {2} / Y: {3}</value>
+    <value>X: {0} Y: {1} G: {2} Y: {3}</value>
   </data>
   <data name="RectangleRegion_GetRulerText_Ruler_info" xml:space="preserve">
     <value>X: {0} / Y: {1} / X2: {2} / Y2: {3}
@@ -161,5 +160,8 @@ Mesafe: {6:0.00} px / Açı: {7:0.00}°</value>
   </data>
   <data name="RectangleTransparent_RectangleTransparent_Rectangle_capture_transparent" xml:space="preserve">
     <value>Dikdörtgen yakalama saydam</value>
+  </data>
+  <data name="ScreenRegion_Name_Monitor_0___X__1__Y__2__Width__3__Height__4_" xml:space="preserve">
+    <value>Monitor {0} (X:{1} Y:{2} Genişlik:{3} Yükseklik:{4})</value>
   </data>
 </root>

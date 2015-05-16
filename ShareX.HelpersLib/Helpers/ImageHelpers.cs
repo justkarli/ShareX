@@ -181,19 +181,32 @@ namespace ShareX.HelpersLib
                 return img;
             }
 
+            int newWidth, newHeight;
             double ratioX = (double)width / img.Width;
             double ratioY = (double)height / img.Height;
-            double ratio = ratioX < ratioY ? ratioX : ratioY;
-            int newWidth = (int)(img.Width * ratio);
-            int newHeight = (int)(img.Height * ratio);
+
+            if (ratioX < ratioY)
+            {
+                newWidth = width;
+                newHeight = (int)(img.Height * ratioX);
+            }
+            else
+            {
+                newWidth = (int)(img.Width * ratioY);
+                newHeight = height;
+            }
 
             return ResizeImage(img, newWidth, newHeight);
         }
 
+        public static Image ResizeImageLimit(Image img, int maxPixels)
+        {
+            return ResizeImageLimit(img, maxPixels, maxPixels);
+        }
+
         public static Image CropImage(Image img, Rectangle rect)
         {
-            if (img != null && rect.X >= 0 && rect.Y >= 0 && rect.Width > 0 && rect.Height > 0 &&
-                new Rectangle(0, 0, img.Width, img.Height).Contains(rect))
+            if (img != null && rect.X >= 0 && rect.Y >= 0 && rect.Width > 0 && rect.Height > 0 && new Rectangle(0, 0, img.Width, img.Height).Contains(rect))
             {
                 using (Bitmap bmp = new Bitmap(img))
                 {
@@ -206,8 +219,7 @@ namespace ShareX.HelpersLib
 
         public static Bitmap CropBitmap(Bitmap bmp, Rectangle rect)
         {
-            if (bmp != null && rect.X >= 0 && rect.Y >= 0 && rect.Width > 0 && rect.Height > 0 &&
-                new Rectangle(0, 0, bmp.Width, bmp.Height).Contains(rect))
+            if (bmp != null && rect.X >= 0 && rect.Y >= 0 && rect.Width > 0 && rect.Height > 0 && new Rectangle(0, 0, bmp.Width, bmp.Height).Contains(rect))
             {
                 return bmp.Clone(rect, bmp.PixelFormat);
             }
@@ -580,15 +592,17 @@ namespace ShareX.HelpersLib
 
         public static void DrawTextWithShadow(Graphics g, string text, PointF position, Font font, Color textColor, Color shadowColor, int shadowOffset = 1)
         {
+            using (Brush textBrush = new SolidBrush(textColor))
             using (Brush shadowBrush = new SolidBrush(shadowColor))
             {
-                g.DrawString(text, font, shadowBrush, position.X + shadowOffset, position.Y + shadowOffset);
+                DrawTextWithShadow(g, text, position, font, textBrush, shadowBrush, shadowOffset);
             }
+        }
 
-            using (Brush textBrush = new SolidBrush(textColor))
-            {
-                g.DrawString(text, font, textBrush, position.X, position.Y);
-            }
+        public static void DrawTextWithShadow(Graphics g, string text, PointF position, Font font, Brush textBrush, Brush shadowBrush, int shadowOffset = 1)
+        {
+            g.DrawString(text, font, shadowBrush, position.X + shadowOffset, position.Y + shadowOffset);
+            g.DrawString(text, font, textBrush, position.X, position.Y);
         }
 
         public static bool IsImagesEqual(Bitmap bmp1, Bitmap bmp2)

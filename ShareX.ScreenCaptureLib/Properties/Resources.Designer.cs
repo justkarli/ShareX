@@ -162,8 +162,7 @@ namespace ShareX.ScreenCaptureLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X: {0} / Y: {1}
-        ///W: {2} / H: {3}.
+        ///   Looks up a localized string similar to X: {0} Y: {1} W: {2} H: {3}.
         /// </summary>
         internal static string RectangleRegion_GetAreaText_Area {
             get {
@@ -198,6 +197,15 @@ namespace ShareX.ScreenCaptureLib.Properties {
         internal static string RectangleTransparent_RectangleTransparent_Rectangle_capture_transparent {
             get {
                 return ResourceManager.GetString("RectangleTransparent_RectangleTransparent_Rectangle_capture_transparent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monitor {0} (X:{1} Y:{2} Width:{3} Height:{4}).
+        /// </summary>
+        internal static string ScreenRegion_Name_Monitor_0___X__1__Y__2__Width__3__Height__4_ {
+            get {
+                return ResourceManager.GetString("ScreenRegion_Name_Monitor_0___X__1__Y__2__Width__3__Height__4_", resourceCulture);
             }
         }
         
