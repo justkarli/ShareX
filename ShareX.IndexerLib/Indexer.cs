@@ -36,6 +36,9 @@ namespace ShareX.IndexerLib
         protected IndexerSettings config = null;
         protected StringBuilder sbContent = new StringBuilder();
 
+        public FolderInfo FolderInfo { get; private set; }
+
+        public static Indexer IndexerImpl { get; private set; }
         protected Indexer(IndexerSettings indexerSettings)
         {
             config = indexerSettings;
@@ -43,30 +46,30 @@ namespace ShareX.IndexerLib
 
         public static string Index(string folderPath, IndexerSettings config)
         {
-            Indexer indexer = null;
+            IndexerImpl = null;
 
             switch (config.Output)
             {
                 case IndexerOutput.Html:
-                    indexer = new IndexerHtml(config);
+                    IndexerImpl = new IndexerHtml(config);
                     break;
                 case IndexerOutput.Txt:
-                    indexer = new IndexerText(config);
+                    IndexerImpl = new IndexerText(config);
                     break;
                 case IndexerOutput.Xml:
-                    indexer = new IndexerXml(config);
+                    IndexerImpl = new IndexerXml(config);
                     break;
             }
 
-            return indexer.Index(folderPath);
+            return IndexerImpl.Index(folderPath);
         }
 
         public virtual string Index(string folderPath)
         {
-            FolderInfo folderInfo = GetFolderInfo(folderPath);
-            folderInfo.Update();
+            FolderInfo = GetFolderInfo(folderPath);
+            FolderInfo.Update();
 
-            IndexFolder(folderInfo);
+            IndexFolder(FolderInfo);
 
             return sbContent.ToString();
         }
