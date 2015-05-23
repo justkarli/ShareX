@@ -32,49 +32,41 @@ namespace ShareX.IndexerLib
 {
     public static class HtmlHelper
     {
-        public static string GetCssStyle(string filePath)
+        private const string HTML_CSS_IMPORT_FORMAT = "<style type=\"text/css\">\r\n{0}\r\n</style>";
+        private const string HTML_STYLE_TAG_FORMAT = "style=\"{0}\"";
+        private const string HTML_START_TAG_FORMAT = "<{0} {2} {1}>";
+        private const string HTML_END_TAG_FORMAT = "</{0}>";
+
+        public static string GetCssStyle(string css_file)
         {
-            string css;
+            string css_import;
 
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-            {
-                css = File.ReadAllText(filePath, Encoding.UTF8);
-            }
+            if (!string.IsNullOrEmpty(css_file) && File.Exists(css_file))
+                css_import = File.ReadAllText(css_file, Encoding.UTF8);
             else
-            {
-                css = Resources.IndexerDefault;
-            }
+                css_import = Resources.IndexerDefault;
 
-            return string.Format("<style type=\"text/css\">\r\n{0}\r\n</style>", css);
+            return string.Format(HTML_CSS_IMPORT_FORMAT, css_import);
         }
 
-        public static string StartTag(string tag, string style = "", string otherFields = "")
+        public static string StartTag(string html_tag_name, string style_name = "", string attributes = "")
         {
             string css = string.Empty;
 
-            if (!string.IsNullOrEmpty(style))
-            {
-                css = string.Format(" style=\"{0}\"", style);
-            }
+            if (!string.IsNullOrEmpty(style_name))
+                css = string.Format(HTML_STYLE_TAG_FORMAT, style_name);
 
-            string fields = string.Empty;
-
-            if (!string.IsNullOrEmpty(otherFields))
-            {
-                fields = " " + otherFields;
-            }
-
-            return string.Format("<{0}{2}{1}>", tag, fields, css);
+            return string.Format(HTML_START_TAG_FORMAT, html_tag_name, attributes, css);
         }
 
         public static string EndTag(string tag)
         {
-            return string.Format("</{0}>", tag);
+            return string.Format(HTML_END_TAG_FORMAT, tag);
         }
 
-        public static string Tag(string tag, string content, string style = "", string otherFields = "")
+        public static string Tag(string tag, string content, string style = "", string attributes = "")
         {
-            return StartTag(tag, style, otherFields) + URLHelpers.HtmlEncode(content) + EndTag(tag);
+            return StartTag(tag, style, attributes) + URLHelpers.HtmlEncode(content) + EndTag(tag);
         }
     }
 }
