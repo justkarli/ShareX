@@ -41,25 +41,25 @@ namespace ShareX.IndexerLib
             StringBuilder sbTxtIndex = new StringBuilder();
             string index = base.Index(folderPath).Trim();
             sbTxtIndex.AppendLine(index);
+            
             if (config.AddFooter)
             {
                 string footer = GetFooter();
                 sbTxtIndex.AppendLine("_".Repeat(footer.Length));
                 sbTxtIndex.AppendLine(footer);
             }
+
             return sbTxtIndex.ToString().Trim();
         }
 
-        protected override void IndexFolder(DirectoryFileInfo dir, int level)
+        protected override void IndexFolder(DirectoryFileInfo dir, int level = 0)
         {
             sbContent.AppendLine(GetFolderNameRow(dir, level));
 
             foreach (DirectoryFileInfo subdir in dir.Folders)
             {
                 if (config.AddEmptyLineAfterFolders)
-                {
                     sbContent.AppendLine();
-                }
 
                 IndexFolder(subdir, level + 1);
             }
@@ -67,14 +67,10 @@ namespace ShareX.IndexerLib
             if (dir.Files.Count > 0)
             {
                 if (config.AddEmptyLineAfterFolders)
-                {
                     sbContent.AppendLine();
-                }
 
                 foreach (FileInfo fi in dir.Files)
-                {
                     sbContent.AppendLine(GetFileNameRow(fi, level + 1));
-                }
             }
         }
     }

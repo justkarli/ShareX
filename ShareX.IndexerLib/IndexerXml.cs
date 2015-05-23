@@ -108,9 +108,7 @@ namespace ShareX.IndexerLib
                 xmlWriter.WriteStartElement("Folders");
 
                 foreach (DirectoryFileInfo subdir in dir.Folders)
-                {
                     IndexFolder(subdir);
-                }
 
                 xmlWriter.WriteEndElement();
             }
