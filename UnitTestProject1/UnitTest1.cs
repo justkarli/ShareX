@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Net.Mime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShareX.IndexerLib;
 
@@ -24,8 +23,17 @@ namespace UnitTestProject1
             _testfile_1 = new FileInfo(Path.Combine(di_sub1.FullName, "testFile1.txt"));
             _testfile_2 = new FileInfo(Path.Combine(di_sub1.FullName, "testFile2.txt"));
 
-            _testfile_1.Create();
-            _testfile_2.Create();
+            if (!File.Exists(_testfile_1.FullName))
+            {
+                var file_stream = _testfile_1.Create();
+                file_stream.Close();
+            }
+
+            if (!File.Exists(_testfile_2.FullName))
+            {
+                var file_stream = _testfile_2.Create();
+                file_stream.Close();
+            }
         }
 
         [TestMethod]
@@ -37,7 +45,7 @@ namespace UnitTestProject1
             Indexer.Index(_test_directory_path, indexer_settings);
             var indexer = Indexer.IndexerImpl;
 
-            Assert.IsTrue(indexer.FolderInfo.TotalFolderCount == 2);
+            Assert.IsTrue(indexer.DirectoryFileInfo.TotalFolderCount == 2);
         }
 
         [TestMethod]
@@ -49,17 +57,22 @@ namespace UnitTestProject1
             Indexer.Index(_test_directory_path, indexer_settings);
             var indexer = Indexer.IndexerImpl;
 
-            Assert.IsTrue(indexer.FolderInfo.TotalFileCount == 2);
+            Assert.IsTrue(indexer.DirectoryFileInfo.TotalFileCount == 2);
         }
 
         [ClassCleanup]
         public static void CleanupIndexerTests()
         {
-            _testfile_1.Delete();
-            _testfile_2.Delete();
+            if(File.Exists(_testfile_1.FullName))
+                _testfile_1.Delete();
+
+            if(File.Exists(_testfile_2.FullName))
+                _testfile_2.Delete();
 
             var di = new DirectoryInfo(_test_directory_path);
-            di.Delete(true);
+            
+            if(Directory.Exists(di.FullName))
+                di.Delete(true);
         }
     }
 }

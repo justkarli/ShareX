@@ -56,7 +56,7 @@ namespace ShareX.IndexerLib
             return sbHtmlIndex.ToString().Trim();
         }
 
-        protected override void IndexFolder(FolderInfo dir, int level)
+        protected override void IndexFolder(DirectoryFileInfo dir, int level)
         {
             sbContent.AppendLine(GetFolderNameRow(dir, level));
 
@@ -75,7 +75,7 @@ namespace ShareX.IndexerLib
                 sbContent.AppendLine(HtmlHelper.EndTag("ul"));
             }
 
-            foreach (FolderInfo subdir in dir.Folders)
+            foreach (DirectoryFileInfo subdir in dir.Folders)
             {
                 IndexFolder(subdir, level + 1);
             }
@@ -83,7 +83,7 @@ namespace ShareX.IndexerLib
             sbContent.AppendLine(HtmlHelper.EndTag("div"));
         }
 
-        protected override string GetFolderNameRow(FolderInfo dir, int level)
+        protected override string GetFolderNameRow(DirectoryFileInfo dir, int level)
         {
             int heading = (level + 1).Between(1, 6);
 
@@ -91,7 +91,7 @@ namespace ShareX.IndexerLib
 
             if (!dir.IsEmpty)
             {
-                folderInfoText = dir.Size.ToSizeString(config.BinaryUnits) + " (";
+                folderInfoText = dir.DataSize.ToSizeString(config.BinaryUnits) + " (";
 
                 if (dir.TotalFileCount > 0)
                 {

@@ -29,43 +29,45 @@ using System.Linq;
 
 namespace ShareX.IndexerLib
 {
-    public class FolderInfo
+    /// <summary>
+    /// Structure to model a directory containing subdirectories and files. 
+    /// </summary>
+    public class DirectoryFileInfo
     {
+        public DirectoryFileInfo(string folderPath)
+        {
+            FolderPath = folderPath;
+            Files = new List<FileInfo>();
+            Folders = new List<DirectoryFileInfo>();
+        }
+
         public string FolderPath { get; set; }
-        public List<FileInfo> Files { get; set; }
-        public List<FolderInfo> Folders { get; set; }
-        public long Size { get; private set; }
+        public long DataSize { get; private set; }
         public int TotalFileCount { get; private set; }
         public int TotalFolderCount { get; private set; }
-        public FolderInfo Parent { get; set; }
+
+        public DirectoryFileInfo Parent { get; set; }
+        public List<FileInfo> Files { get; set; }
+        public List<DirectoryFileInfo> Folders { get; set; }
 
         public string FolderName
         {
-            get
-            {
-                return Path.GetFileName(FolderPath);
-            }
+            get { return Path.GetFileName(FolderPath); }
         }
 
         public bool IsEmpty
         {
-            get
-            {
-                return TotalFileCount == 0 && TotalFolderCount == 0;
-            }
+            get { return TotalFileCount == 0 && TotalFolderCount == 0; }
         }
 
-        public FolderInfo(string folderPath)
-        {
-            FolderPath = folderPath;
-            Files = new List<FileInfo>();
-            Folders = new List<FolderInfo>();
-        }
 
-        public void Update()
+        /// <summary>
+        /// Collects information of all subdirectories and files in this directory recursively
+        /// </summary>
+        public void CollectInfo()
         {
-            Folders.ForEach(x => x.Update());
-            Size = Folders.Sum(x => x.Size) + Files.Sum(x => x.Length);
+            Folders.ForEach(x => x.CollectInfo());
+            DataSize = Folders.Sum(x => x.DataSize) + Files.Sum(x => x.Length);
             TotalFileCount = Files.Count + Folders.Sum(x => x.TotalFileCount);
             TotalFolderCount = Folders.Count + Folders.Sum(x => x.TotalFolderCount);
         }

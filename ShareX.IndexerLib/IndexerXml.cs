@@ -41,8 +41,8 @@ namespace ShareX.IndexerLib
 
         public override string Index(string folderPath)
         {
-            FolderInfo folderInfo = GetFolderInfo(folderPath);
-            folderInfo.Update();
+            DirectoryFileInfo directory_file_info = GetFolderInfo(folderPath);
+            directory_file_info.CollectInfo();
 
             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
             xmlWriterSettings.Encoding = new UTF8Encoding(false);
@@ -54,7 +54,7 @@ namespace ShareX.IndexerLib
                 using (xmlWriter = XmlWriter.Create(ms, xmlWriterSettings))
                 {
                     xmlWriter.WriteStartDocument();
-                    IndexFolder(folderInfo);
+                    IndexFolder(directory_file_info);
                     xmlWriter.WriteEndDocument();
                     xmlWriter.Flush();
                 }
@@ -63,19 +63,19 @@ namespace ShareX.IndexerLib
             }
         }
 
-        protected override void IndexFolder(FolderInfo dir, int level = 0)
+        protected override void IndexFolder(DirectoryFileInfo dir, int level = 0)
         {
             xmlWriter.WriteStartElement("Folder");
 
             if (config.UseAttribute)
             {
                 xmlWriter.WriteAttributeString("Name", dir.FolderName);
-                if (!dir.IsEmpty) xmlWriter.WriteAttributeString("Size", dir.Size.ToSizeString(config.BinaryUnits));
+                if (!dir.IsEmpty) xmlWriter.WriteAttributeString("Size", dir.DataSize.ToSizeString(config.BinaryUnits));
             }
             else
             {
                 xmlWriter.WriteElementString("Name", dir.FolderName);
-                if (!dir.IsEmpty) xmlWriter.WriteElementString("Size", dir.Size.ToSizeString(config.BinaryUnits));
+                if (!dir.IsEmpty) xmlWriter.WriteElementString("Size", dir.DataSize.ToSizeString(config.BinaryUnits));
             }
 
             if (dir.Files.Count > 0)
@@ -107,7 +107,7 @@ namespace ShareX.IndexerLib
             {
                 xmlWriter.WriteStartElement("Folders");
 
-                foreach (FolderInfo subdir in dir.Folders)
+                foreach (DirectoryFileInfo subdir in dir.Folders)
                 {
                     IndexFolder(subdir);
                 }

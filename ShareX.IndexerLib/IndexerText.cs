@@ -50,11 +50,11 @@ namespace ShareX.IndexerLib
             return sbTxtIndex.ToString().Trim();
         }
 
-        protected override void IndexFolder(FolderInfo dir, int level)
+        protected override void IndexFolder(DirectoryFileInfo dir, int level)
         {
             sbContent.AppendLine(GetFolderNameRow(dir, level));
 
-            foreach (FolderInfo subdir in dir.Folders)
+            foreach (DirectoryFileInfo subdir in dir.Folders)
             {
                 if (config.AddEmptyLineAfterFolders)
                 {

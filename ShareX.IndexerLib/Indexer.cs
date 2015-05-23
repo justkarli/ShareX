@@ -36,7 +36,7 @@ namespace ShareX.IndexerLib
         protected IndexerSettings config = null;
         protected StringBuilder sbContent = new StringBuilder();
 
-        public FolderInfo FolderInfo { get; private set; }
+        public DirectoryFileInfo DirectoryFileInfo { get; private set; }
 
         public static Indexer IndexerImpl { get; private set; }
         protected Indexer(IndexerSettings indexerSettings)
@@ -66,17 +66,17 @@ namespace ShareX.IndexerLib
 
         public virtual string Index(string folderPath)
         {
-            FolderInfo = GetFolderInfo(folderPath);
-            FolderInfo.Update();
+            DirectoryFileInfo = GetFolderInfo(folderPath);
+            DirectoryFileInfo.CollectInfo();
 
-            IndexFolder(FolderInfo);
+            IndexFolder(DirectoryFileInfo);
 
             return sbContent.ToString();
         }
 
-        protected FolderInfo GetFolderInfo(string folderPath, int level = 0)
+        protected DirectoryFileInfo GetFolderInfo(string folderPath, int level = 0)
         {
-            FolderInfo folderInfo = new FolderInfo(folderPath);
+            DirectoryFileInfo directory_file_info = new DirectoryFileInfo(folderPath);
 
             if (config.MaxDepthLevel == 0 || level < config.MaxDepthLevel)
             {
@@ -89,9 +89,9 @@ namespace ShareX.IndexerLib
                         continue;
                     }
 
-                    FolderInfo subFolderInfo = GetFolderInfo(directoryInfo.FullName, level + 1);
-                    folderInfo.Folders.Add(subFolderInfo);
-                    subFolderInfo.Parent = folderInfo;
+                    DirectoryFileInfo sub_directory_file_info = GetFolderInfo(directoryInfo.FullName, level + 1);
+                    directory_file_info.Folders.Add(sub_directory_file_info);
+                    sub_directory_file_info.Parent = directory_file_info;
                 }
 
                 foreach (FileInfo fileInfo in currentDirectoryInfo.GetFiles())
@@ -101,24 +101,24 @@ namespace ShareX.IndexerLib
                         continue;
                     }
 
-                    folderInfo.Files.Add(fileInfo);
+                    directory_file_info.Files.Add(fileInfo);
                 }
 
-                folderInfo.Files.Sort((x, y) => x.Name.CompareTo(y.Name));
+                directory_file_info.Files.Sort((x, y) => x.Name.CompareTo(y.Name));
             }
 
-            return folderInfo;
+            return directory_file_info;
         }
 
-        protected abstract void IndexFolder(FolderInfo dir, int level = 0);
+        protected abstract void IndexFolder(DirectoryFileInfo dir, int level = 0);
 
-        protected virtual string GetFolderNameRow(FolderInfo dir, int level = 0)
+        protected virtual string GetFolderNameRow(DirectoryFileInfo dir, int level = 0)
         {
             string text = string.Format("{0}{1}", config.IndentationText.Repeat(level), dir.FolderName);
 
-            if (dir.Size > 0)
+            if (dir.DataSize > 0)
             {
-                text += string.Format(" [{0}]", dir.Size.ToSizeString(config.BinaryUnits));
+                text += string.Format(" [{0}]", dir.DataSize.ToSizeString(config.BinaryUnits));
             }
 
             return text;
