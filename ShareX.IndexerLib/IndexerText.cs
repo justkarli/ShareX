@@ -31,47 +31,53 @@ namespace ShareX.IndexerLib
 {
     public class IndexerText : Indexer
     {
+        protected StringBuilder _output_content_builder;
+
         public IndexerText(IndexerSettings indexerSettings)
             : base(indexerSettings)
         {
         }
 
-        public override string Index(string folderPath)
+        protected string PrintFolderInfo(DirectoryFileInfo dir, int level = 0)
         {
-            StringBuilder sbTxtIndex = new StringBuilder();
-            string index = base.Index(folderPath).Trim();
-            sbTxtIndex.AppendLine(index);
-            
-            if (config.AddFooter)
-            {
-                string footer = GetFooter();
-                sbTxtIndex.AppendLine("_".Repeat(footer.Length));
-                sbTxtIndex.AppendLine(footer);
-            }
-
-            return sbTxtIndex.ToString().Trim();
-        }
-
-        protected override void IndexFolder(DirectoryFileInfo dir, int level = 0)
-        {
-            sbContent.AppendLine(GetFolderNameRow(dir, level));
+            _output_content_builder.AppendLine(GetFolderNameRow(dir, level));
 
             foreach (DirectoryFileInfo subdir in dir.Folders)
             {
                 if (config.AddEmptyLineAfterFolders)
-                    sbContent.AppendLine();
+                    _output_content_builder.AppendLine();
 
-                IndexFolder(subdir, level + 1);
+                PrintFolderInfo(subdir, level + 1);
             }
 
             if (dir.Files.Count > 0)
             {
                 if (config.AddEmptyLineAfterFolders)
-                    sbContent.AppendLine();
+                    _output_content_builder.AppendLine();
 
                 foreach (FileInfo fi in dir.Files)
-                    sbContent.AppendLine(GetFileNameRow(fi, level + 1));
+                    _output_content_builder.AppendLine(GetFileNameRow(fi, level + 1));
             }
+
+            return _output_content_builder.ToString();
+        }
+
+        public override string PrintFolderInfo()
+        {
+            _output_content_builder = new StringBuilder();
+            StringBuilder output_content_wrapper_builder = new StringBuilder();
+
+            string content = PrintFolderInfo(DirectoryFileInfo).Trim();
+            output_content_wrapper_builder.AppendLine(content);
+
+            if (config.AddFooter)
+            {
+                string footer = GetFooter();
+                output_content_wrapper_builder.AppendLine("_".Repeat(footer.Length));
+                output_content_wrapper_builder.AppendLine(footer);
+            }
+
+            return output_content_wrapper_builder.ToString().Trim();
         }
     }
 }

@@ -39,43 +39,23 @@ namespace ShareX.IndexerLib
         {
         }
 
-        public override string Index(string folderPath)
-        {
-            DirectoryFileInfo directory_file_info = GetFolderInfo(folderPath);
-            directory_file_info.CollectInfo();
-
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
-            xmlWriterSettings.Encoding = new UTF8Encoding(false);
-            xmlWriterSettings.ConformanceLevel = ConformanceLevel.Document;
-            xmlWriterSettings.Indent = true;
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                using (xmlWriter = XmlWriter.Create(ms, xmlWriterSettings))
-                {
-                    xmlWriter.WriteStartDocument();
-                    IndexFolder(directory_file_info);
-                    xmlWriter.WriteEndDocument();
-                    xmlWriter.Flush();
-                }
-
-                return Encoding.UTF8.GetString(ms.ToArray());
-            }
-        }
-
-        protected override void IndexFolder(DirectoryFileInfo dir, int level = 0)
+        protected string PrintFolderInfo(DirectoryFileInfo dir, int level = 0)
         {
             xmlWriter.WriteStartElement("Folder");
 
             if (config.UseAttribute)
             {
                 xmlWriter.WriteAttributeString("Name", dir.FolderName);
-                if (!dir.IsEmpty) xmlWriter.WriteAttributeString("Size", dir.DataSize.ToSizeString(config.BinaryUnits));
+
+                if (!dir.IsEmpty)
+                    xmlWriter.WriteAttributeString("Size", dir.DataSize.ToSizeString(config.BinaryUnits));
             }
             else
             {
                 xmlWriter.WriteElementString("Name", dir.FolderName);
-                if (!dir.IsEmpty) xmlWriter.WriteElementString("Size", dir.DataSize.ToSizeString(config.BinaryUnits));
+
+                if (!dir.IsEmpty)
+                    xmlWriter.WriteElementString("Size", dir.DataSize.ToSizeString(config.BinaryUnits));
             }
 
             if (dir.Files.Count > 0)
@@ -108,12 +88,34 @@ namespace ShareX.IndexerLib
                 xmlWriter.WriteStartElement("Folders");
 
                 foreach (DirectoryFileInfo subdir in dir.Folders)
-                    IndexFolder(subdir);
+                    PrintFolderInfo(subdir);
 
                 xmlWriter.WriteEndElement();
             }
 
             xmlWriter.WriteEndElement();
+            return xmlWriter.ToString();
+        }
+
+        public override string PrintFolderInfo()
+        {
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+            xmlWriterSettings.Encoding = new UTF8Encoding(false);
+            xmlWriterSettings.ConformanceLevel = ConformanceLevel.Document;
+            xmlWriterSettings.Indent = true;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (xmlWriter = XmlWriter.Create(ms, xmlWriterSettings))
+                {
+                    xmlWriter.WriteStartDocument();
+                    PrintFolderInfo(DirectoryFileInfo);
+                    xmlWriter.WriteEndDocument();
+                    xmlWriter.Flush();
+                }
+
+                return Encoding.UTF8.GetString(ms.ToArray());
+            }
         }
     }
 }
