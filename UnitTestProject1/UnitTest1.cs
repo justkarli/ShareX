@@ -42,8 +42,8 @@ namespace UnitTestProject1
             var indexer_settings = new IndexerSettings();
             indexer_settings.Output = IndexerOutput.Txt;
 
-            Indexer.Index(_test_directory_path, indexer_settings);
-            var indexer = Indexer.IndexerImpl;
+            var indexer = new Indexer(indexer_settings);
+            indexer.Index(_test_directory_path);
 
             Assert.IsTrue(indexer.DirectoryFileInfo.TotalFolderCount == 2);
         }
@@ -54,8 +54,8 @@ namespace UnitTestProject1
             var indexer_settings = new IndexerSettings();
             indexer_settings.Output = IndexerOutput.Txt;
 
-            Indexer.Index(_test_directory_path, indexer_settings);
-            var indexer = Indexer.IndexerImpl;
+            var indexer = new Indexer(indexer_settings);
+            indexer.Index(_test_directory_path);
 
             Assert.IsTrue(indexer.DirectoryFileInfo.TotalFileCount == 2);
         }

@@ -165,7 +165,12 @@ namespace ShareX
                 if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
 
                 taskSettings.IndexerSettings.BinaryUnits = Program.Settings.BinaryUnits;
-                string text = Indexer.Index(folderPath, taskSettings.IndexerSettings);
+
+                // TODO factory for indexer out put, dependent on output format
+                var indexer_strategy = new IndexerOutputStrategy(new Indexer(taskSettings.IndexerSettings), new PrintIndexerText());
+                
+                string text = indexer_strategy.ExecuteIndexerOutputStrategy(folderPath);
+
                 UploadTask task = UploadTask.CreateTextUploaderTask(text, taskSettings);
                 task.Info.FileName = Path.ChangeExtension(task.Info.FileName, taskSettings.IndexerSettings.Output.ToString().ToLower());
                 TaskManager.Start(task);
