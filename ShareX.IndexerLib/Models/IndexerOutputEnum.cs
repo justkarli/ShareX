@@ -27,7 +27,7 @@ using System.ComponentModel;
 
 namespace ShareX.IndexerLib
 {
-    public enum IndexerOutput
+    public enum IndexerOutputEnum
     {
         [Description("Text")]
         Txt,

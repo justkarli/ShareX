@@ -40,7 +40,7 @@ namespace UnitTestProject1
         public void TestTotalFolderCountOfIndexer()
         {
             var indexer_settings = new IndexerSettings();
-            indexer_settings.Output = IndexerOutput.Txt;
+            indexer_settings.OutputEnum = IndexerOutputEnum.Txt;
 
             var indexer = new Indexer(indexer_settings);
             indexer.Index(_test_directory_path);
@@ -52,7 +52,7 @@ namespace UnitTestProject1
         public void TestTotalFileCountOfIndexer()
         {
             var indexer_settings = new IndexerSettings();
-            indexer_settings.Output = IndexerOutput.Txt;
+            indexer_settings.OutputEnum = IndexerOutputEnum.Txt;
 
             var indexer = new Indexer(indexer_settings);
             indexer.Index(_test_directory_path);

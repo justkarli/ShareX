@@ -8,7 +8,6 @@ namespace ShareX.IndexerLib
         {
             Indexer = indexer;
             _indexer_output_formatter = output_strategy;
-
         }
 
         public string ExecuteIndexerOutputStrategy(string folder_path)

@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Indexer\IndexerOutputFactory.cs" />
+    <Compile Include="Models\IndexerOutputEnum.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Indexer\Indexer.cs" />
     <Compile Include="Indexer\OutputGenerator\PrintIndexerHtml.cs" />
