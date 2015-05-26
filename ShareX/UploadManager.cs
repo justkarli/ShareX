@@ -167,8 +167,8 @@ namespace ShareX
 
                 taskSettings.IndexerSettings.BinaryUnits = Program.Settings.BinaryUnits;
 
-                var index_printer_factory = new IndexerOutputFactory();
-                PrintIndexerOutput indexer_printer = index_printer_factory.CreateIndexerOutput(taskSettings.IndexerSettings.OutputEnum);
+                
+                PrintIndexerOutput indexer_printer = IndexerOutputFactory.Instance.CreateIndexerOutput(taskSettings.IndexerSettings.OutputEnum);
                 
                 var indexer_strategy = new IndexerOutputStrategy(new Indexer(taskSettings.IndexerSettings), indexer_printer);
                 
