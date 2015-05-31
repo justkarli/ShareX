@@ -28,6 +28,7 @@ using ShareX.Properties;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -79,15 +80,15 @@ namespace ShareX
         {
             UnregisterHotkey(hotkeySetting, false);
 
-            if (hotkeySetting.HotkeyInfo.Status != HotkeyStatus.Registered && hotkeySetting.HotkeyInfo.IsValidHotkey)
+            if (hotkeySetting.HotkeyInfo.Status != HotkeyStatusEnum.Registered && hotkeySetting.HotkeyInfo.IsValidHotkey)
             {
                 hotkeyForm.RegisterHotkey(hotkeySetting.HotkeyInfo);
 
-                if (hotkeySetting.HotkeyInfo.Status == HotkeyStatus.Registered)
+                if (hotkeySetting.HotkeyInfo.Status == HotkeyStatusEnum.Registered)
                 {
                     DebugHelper.WriteLine("Hotkey registered: " + hotkeySetting);
                 }
-                else if (hotkeySetting.HotkeyInfo.Status == HotkeyStatus.Failed)
+                else if (hotkeySetting.HotkeyInfo.Status == HotkeyStatusEnum.Failed)
                 {
                     DebugHelper.WriteLine("Hotkey register failed: " + hotkeySetting);
                 }
@@ -109,15 +110,15 @@ namespace ShareX
 
         public void UnregisterHotkey(HotkeySettings hotkeySetting, bool removeFromList = true)
         {
-            if (hotkeySetting.HotkeyInfo.Status == HotkeyStatus.Registered)
+            if (hotkeySetting.HotkeyInfo.Status == HotkeyStatusEnum.Registered)
             {
                 hotkeyForm.UnregisterHotkey(hotkeySetting.HotkeyInfo);
 
-                if (hotkeySetting.HotkeyInfo.Status == HotkeyStatus.NotConfigured)
+                if (hotkeySetting.HotkeyInfo.Status == HotkeyStatusEnum.NotConfigured)
                 {
                     DebugHelper.WriteLine("Hotkey unregistered: " + hotkeySetting);
                 }
-                else if (hotkeySetting.HotkeyInfo.Status == HotkeyStatus.Failed)
+                else if (hotkeySetting.HotkeyInfo.Status == HotkeyStatusEnum.Failed)
                 {
                     DebugHelper.WriteLine("Hotkey unregister failed: " + hotkeySetting);
                 }
@@ -139,7 +140,7 @@ namespace ShareX
 
         public void ShowFailedHotkeys()
         {
-            IEnumerable<HotkeySettings> failedHotkeysList = Hotkeys.Where(x => x.HotkeyInfo.Status == HotkeyStatus.Failed);
+            IEnumerable<HotkeySettings> failedHotkeysList = Hotkeys.Where(x => x.HotkeyInfo.Status == HotkeyStatusEnum.Failed);
 
             if (failedHotkeysList.Count() > 0)
             {
@@ -162,10 +163,10 @@ namespace ShareX
         {
             return new List<HotkeySettings>
             {
-                new HotkeySettings(HotkeyType.PrintScreen, Keys.PrintScreen),
-                new HotkeySettings(HotkeyType.ActiveWindow, Keys.Alt | Keys.PrintScreen),
-                new HotkeySettings(HotkeyType.RectangleRegion, Keys.Control | Keys.PrintScreen),
-                new HotkeySettings(HotkeyType.ScreenRecorder, Keys.Shift | Keys.PrintScreen)
+                new HotkeySettings(HotkeyCommandEnum.PrintScreen, Keys.PrintScreen),
+                new HotkeySettings(HotkeyCommandEnum.ActiveWindow, Keys.Alt | Keys.PrintScreen),
+                new HotkeySettings(HotkeyCommandEnum.RectangleRegion, Keys.Control | Keys.PrintScreen),
+                new HotkeySettings(HotkeyCommandEnum.ScreenRecorder, Keys.Shift | Keys.PrintScreen)
             };
         }
     }

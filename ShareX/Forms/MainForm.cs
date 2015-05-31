@@ -36,6 +36,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -174,7 +175,7 @@ namespace ShareX
 
             foreach (HotkeySettings hotkeySetting in Program.HotkeysConfig.Hotkeys)
             {
-                if (hotkeySetting.TaskSettings.Job != HotkeyType.None && (!Program.Settings.WorkflowsOnlyShowEdited || !hotkeySetting.TaskSettings.IsUsingDefaultSettings))
+                if (hotkeySetting.TaskSettings.Job != HotkeyCommandEnum.None && (!Program.Settings.WorkflowsOnlyShowEdited || !hotkeySetting.TaskSettings.IsUsingDefaultSettings))
                 {
                     tsddbWorkflows.DropDownItems.Add(WorkflowMenuItem(hotkeySetting));
                     tsmiTrayWorkflows.DropDownItems.Add(WorkflowMenuItem(hotkeySetting));
@@ -699,7 +700,7 @@ namespace ShareX
 
         private bool CheckCLIHotkey(CLICommand command)
         {
-            foreach (HotkeyType job in Helpers.GetEnums<HotkeyType>())
+            foreach (HotkeyCommandEnum job in Helpers.GetEnums<HotkeyCommandEnum>())
             {
                 if (command.Command.Equals(job.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -717,7 +718,7 @@ namespace ShareX
             {
                 foreach (HotkeySettings hotkeySetting in Program.HotkeysConfig.Hotkeys)
                 {
-                    if (hotkeySetting.TaskSettings.Job != HotkeyType.None)
+                    if (hotkeySetting.TaskSettings.Job != HotkeyCommandEnum.None)
                     {
                         if (command.Parameter == hotkeySetting.TaskSettings.ToString())
                         {
@@ -1467,13 +1468,13 @@ namespace ShareX
         {
             DebugHelper.WriteLine("Hotkey triggered: " + hotkeySetting);
 
-            if (hotkeySetting.TaskSettings.Job != HotkeyType.None)
+            if (hotkeySetting.TaskSettings.Job != HotkeyCommandEnum.None)
             {
                 ExecuteJob(hotkeySetting.TaskSettings);
             }
         }
 
-        private void ExecuteJob(HotkeyType job)
+        private void ExecuteJob(HotkeyCommandEnum job)
         {
             ExecuteJob(Program.DefaultTaskSettings, job);
         }
@@ -1483,130 +1484,130 @@ namespace ShareX
             ExecuteJob(taskSettings, taskSettings.Job);
         }
 
-        private void ExecuteJob(TaskSettings taskSettings, HotkeyType job)
+        private void ExecuteJob(TaskSettings taskSettings, HotkeyCommandEnum job)
         {
             TaskSettings safeTaskSettings = TaskSettings.GetSafeTaskSettings(taskSettings);
 
             switch (job)
             {
-                case HotkeyType.FileUpload:
+                case HotkeyCommandEnum.FileUpload:
                     UploadManager.UploadFile(safeTaskSettings);
                     break;
-                case HotkeyType.FolderUpload:
+                case HotkeyCommandEnum.FolderUpload:
                     UploadManager.UploadFolder(safeTaskSettings);
                     break;
-                case HotkeyType.ClipboardUpload:
+                case HotkeyCommandEnum.ClipboardUpload:
                     UploadManager.ClipboardUpload(safeTaskSettings);
                     break;
-                case HotkeyType.ClipboardUploadWithContentViewer:
+                case HotkeyCommandEnum.ClipboardUploadWithContentViewer:
                     UploadManager.ClipboardUploadWithContentViewer(safeTaskSettings);
                     break;
-                case HotkeyType.UploadURL:
+                case HotkeyCommandEnum.UploadURL:
                     UploadManager.UploadURL(safeTaskSettings);
                     break;
-                case HotkeyType.DragDropUpload:
+                case HotkeyCommandEnum.DragDropUpload:
                     TaskHelpers.OpenDropWindow();
                     break;
-                case HotkeyType.StopUploads:
+                case HotkeyCommandEnum.StopUploads:
                     TaskManager.StopAllTasks();
                     break;
-                case HotkeyType.PrintScreen:
+                case HotkeyCommandEnum.PrintScreen:
                     CaptureScreenshot(CaptureType.Screen, safeTaskSettings, false);
                     break;
-                case HotkeyType.ActiveWindow:
+                case HotkeyCommandEnum.ActiveWindow:
                     CaptureScreenshot(CaptureType.ActiveWindow, safeTaskSettings, false);
                     break;
-                case HotkeyType.ActiveMonitor:
+                case HotkeyCommandEnum.ActiveMonitor:
                     CaptureScreenshot(CaptureType.ActiveMonitor, safeTaskSettings, false);
                     break;
-                case HotkeyType.RectangleRegion:
+                case HotkeyCommandEnum.RectangleRegion:
                     CaptureScreenshot(CaptureType.Rectangle, safeTaskSettings, false);
                     break;
-                case HotkeyType.WindowRectangle:
+                case HotkeyCommandEnum.WindowRectangle:
                     CaptureScreenshot(CaptureType.RectangleWindow, safeTaskSettings, false);
                     break;
-                case HotkeyType.RectangleAnnotate:
+                case HotkeyCommandEnum.RectangleAnnotate:
                     CaptureRectangleAnnotate(safeTaskSettings, false);
                     break;
-                case HotkeyType.RectangleLight:
+                case HotkeyCommandEnum.RectangleLight:
                     CaptureRectangleLight(safeTaskSettings, false);
                     break;
-                case HotkeyType.RectangleTransparent:
+                case HotkeyCommandEnum.RectangleTransparent:
                     CaptureRectangleTransparent(safeTaskSettings, false);
                     break;
-                case HotkeyType.RoundedRectangleRegion:
+                case HotkeyCommandEnum.RoundedRectangleRegion:
                     CaptureScreenshot(CaptureType.RoundedRectangle, safeTaskSettings, false);
                     break;
-                case HotkeyType.EllipseRegion:
+                case HotkeyCommandEnum.EllipseRegion:
                     CaptureScreenshot(CaptureType.Ellipse, safeTaskSettings, false);
                     break;
-                case HotkeyType.TriangleRegion:
+                case HotkeyCommandEnum.TriangleRegion:
                     CaptureScreenshot(CaptureType.Triangle, safeTaskSettings, false);
                     break;
-                case HotkeyType.DiamondRegion:
+                case HotkeyCommandEnum.DiamondRegion:
                     CaptureScreenshot(CaptureType.Diamond, safeTaskSettings, false);
                     break;
-                case HotkeyType.PolygonRegion:
+                case HotkeyCommandEnum.PolygonRegion:
                     CaptureScreenshot(CaptureType.Polygon, safeTaskSettings, false);
                     break;
-                case HotkeyType.FreeHandRegion:
+                case HotkeyCommandEnum.FreeHandRegion:
                     CaptureScreenshot(CaptureType.Freehand, safeTaskSettings, false);
                     break;
-                case HotkeyType.CustomRegion:
+                case HotkeyCommandEnum.CustomRegion:
                     CaptureScreenshot(CaptureType.CustomRegion, safeTaskSettings, false);
                     break;
-                case HotkeyType.LastRegion:
+                case HotkeyCommandEnum.LastRegion:
                     CaptureScreenshot(CaptureType.LastRegion, safeTaskSettings, false);
                     break;
-                case HotkeyType.ScreenRecorder:
+                case HotkeyCommandEnum.ScreenRecorder:
                     TaskHelpers.StartScreenRecording(ScreenRecordOutput.FFmpeg, safeTaskSettings, false);
                     break;
-                case HotkeyType.StartScreenRecorder:
+                case HotkeyCommandEnum.StartScreenRecorder:
                     TaskHelpers.StartScreenRecording(ScreenRecordOutput.FFmpeg, safeTaskSettings, true);
                     break;
-                case HotkeyType.ScreenRecorderGIF:
+                case HotkeyCommandEnum.ScreenRecorderGIF:
                     TaskHelpers.StartScreenRecording(ScreenRecordOutput.GIF, safeTaskSettings, false);
                     break;
-                case HotkeyType.StartScreenRecorderGIF:
+                case HotkeyCommandEnum.StartScreenRecorderGIF:
                     TaskHelpers.StartScreenRecording(ScreenRecordOutput.GIF, safeTaskSettings, true);
                     break;
-                case HotkeyType.AutoCapture:
+                case HotkeyCommandEnum.AutoCapture:
                     TaskHelpers.OpenAutoCapture();
                     break;
-                case HotkeyType.StartAutoCapture:
+                case HotkeyCommandEnum.StartAutoCapture:
                     TaskHelpers.StartAutoCapture();
                     break;
-                case HotkeyType.OpenScreenshotsFolder:
+                case HotkeyCommandEnum.OpenScreenshotsFolder:
                     TaskHelpers.OpenScreenshotsFolder();
                     break;
-                case HotkeyType.ColorPicker:
+                case HotkeyCommandEnum.ColorPicker:
                     TaskHelpers.OpenColorPicker();
                     break;
-                case HotkeyType.ScreenColorPicker:
+                case HotkeyCommandEnum.ScreenColorPicker:
                     TaskHelpers.OpenScreenColorPicker(safeTaskSettings);
                     break;
-                case HotkeyType.Ruler:
+                case HotkeyCommandEnum.Ruler:
                     TaskHelpers.OpenRuler();
                     break;
-                case HotkeyType.FTPClient:
+                case HotkeyCommandEnum.FTPClient:
                     TaskHelpers.OpenFTPClient();
                     break;
-                case HotkeyType.HashCheck:
+                case HotkeyCommandEnum.HashCheck:
                     TaskHelpers.OpenHashCheck();
                     break;
-                case HotkeyType.IndexFolder:
+                case HotkeyCommandEnum.IndexFolder:
                     TaskHelpers.OpenIndexFolder();
                     break;
-                case HotkeyType.ImageEffects:
+                case HotkeyCommandEnum.ImageEffects:
                     TaskHelpers.OpenImageEffects();
                     break;
-                case HotkeyType.QRCode:
+                case HotkeyCommandEnum.QRCode:
                     TaskHelpers.OpenQRCode();
                     break;
-                case HotkeyType.TweetMessage:
+                case HotkeyCommandEnum.TweetMessage:
                     TaskHelpers.TweetMessage();
                     break;
-                case HotkeyType.Automate:
+                case HotkeyCommandEnum.Automate:
                     TaskHelpers.StartAutomate();
                     break;
             }

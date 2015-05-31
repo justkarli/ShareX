@@ -36,6 +36,7 @@ using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Linq;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -43,7 +44,7 @@ namespace ShareX
     {
         public string Description = string.Empty;
 
-        public HotkeyType Job = HotkeyType.None;
+        public HotkeyCommandEnum Job = HotkeyCommandEnum.None;
 
         public bool UseDefaultAfterCaptureJob = true;
         public AfterCaptureTasks AfterCaptureJob = AfterCaptureTasks.CopyImageToClipboard | AfterCaptureTasks.SaveImageToFile | AfterCaptureTasks.UploadImageToHost;

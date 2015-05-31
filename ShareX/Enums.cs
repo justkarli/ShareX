@@ -130,57 +130,7 @@ namespace ShareX
         LastRegion
     }
 
-    public enum HotkeyType // Localized
-    {
-        None,
-        FileUpload,
-        FolderUpload,
-        ClipboardUpload,
-        ClipboardUploadWithContentViewer,
-        UploadURL,
-        DragDropUpload,
-        StopUploads,
-        PrintScreen,
-        ActiveWindow,
-        ActiveMonitor,
-        RectangleRegion,
-        WindowRectangle,
-        RectangleAnnotate,
-        RectangleLight,
-        RectangleTransparent,
-        RoundedRectangleRegion,
-        EllipseRegion,
-        TriangleRegion,
-        DiamondRegion,
-        PolygonRegion,
-        FreeHandRegion,
-        CustomRegion,
-        LastRegion,
-        ScreenRecorder,
-        StartScreenRecorder,
-        ScreenRecorderGIF,
-        StartScreenRecorderGIF,
-        AutoCapture,
-        StartAutoCapture,
-        OpenScreenshotsFolder,
-        ColorPicker,
-        ScreenColorPicker,
-        Ruler,
-        FTPClient,
-        HashCheck,
-        IndexFolder,
-        ImageEffects,
-        QRCode,
-        TweetMessage,
-        Automate
-    }
-
-    public enum HotkeyStatus
-    {
-        Registered,
-        Failed,
-        NotConfigured
-    }
+    
 
     public enum PopUpNotificationType // Localized
     {

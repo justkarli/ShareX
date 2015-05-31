@@ -34,6 +34,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -77,7 +78,7 @@ namespace ShareX
 
             UpdateWindowTitle();
 
-            AddEnumItemsContextMenu<HotkeyType>(x =>
+            AddEnumItemsContextMenu<HotkeyCommandEnum>(x =>
             {
                 TaskSettings.Job = x;
                 UpdateWindowTitle();

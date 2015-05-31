@@ -27,6 +27,7 @@ using Newtonsoft.Json;
 using ShareX.HelpersLib;
 using System.Text;
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -38,46 +39,31 @@ namespace ShareX
         public ushort ID { get; set; }
 
         [JsonIgnore]
-        public HotkeyStatus Status { get; set; }
+        public HotkeyStatusEnum Status { get; set; }
 
         public Keys KeyCode
         {
-            get
-            {
-                return Hotkey & Keys.KeyCode;
-            }
+            get { return Hotkey & Keys.KeyCode; }
         }
 
         public Keys ModifiersKeys
         {
-            get
-            {
-                return Hotkey & Keys.Modifiers;
-            }
+            get { return Hotkey & Keys.Modifiers; }
         }
 
         public bool Control
         {
-            get
-            {
-                return Hotkey.HasFlag(Keys.Control);
-            }
+            get { return Hotkey.HasFlag(Keys.Control); }
         }
 
         public bool Shift
         {
-            get
-            {
-                return Hotkey.HasFlag(Keys.Shift);
-            }
+            get { return Hotkey.HasFlag(Keys.Shift); }
         }
 
-        public bool Alt
+        public bool Alt 
         {
-            get
-            {
-                return Hotkey.HasFlag(Keys.Alt);
-            }
+            get { return Hotkey.HasFlag(Keys.Alt); }
         }
 
         public bool Win { get; set; }
@@ -115,7 +101,7 @@ namespace ShareX
 
         public HotkeyInfo()
         {
-            Status = HotkeyStatus.NotConfigured;
+            Status = HotkeyStatusEnum.NotConfigured;
         }
 
         public HotkeyInfo(Keys hotkey)

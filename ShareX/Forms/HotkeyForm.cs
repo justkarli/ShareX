@@ -26,6 +26,7 @@
 using ShareX.HelpersLib;
 using System.Diagnostics;
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -47,11 +48,11 @@ namespace ShareX
 
         public void RegisterHotkey(HotkeyInfo hotkeyInfo)
         {
-            if (hotkeyInfo != null && hotkeyInfo.Status != HotkeyStatus.Registered)
+            if (hotkeyInfo != null && hotkeyInfo.Status != HotkeyStatusEnum.Registered)
             {
                 if (!hotkeyInfo.IsValidHotkey)
                 {
-                    hotkeyInfo.Status = HotkeyStatus.NotConfigured;
+                    hotkeyInfo.Status = HotkeyStatusEnum.NotConfigured;
                     return;
                 }
 
@@ -63,7 +64,7 @@ namespace ShareX
                     if (hotkeyInfo.ID == 0)
                     {
                         DebugHelper.WriteLine("Unable to generate unique hotkey ID: " + hotkeyInfo);
-                        hotkeyInfo.Status = HotkeyStatus.Failed;
+                        hotkeyInfo.Status = HotkeyStatusEnum.Failed;
                         return;
                     }
                 }
@@ -73,11 +74,11 @@ namespace ShareX
                     NativeMethods.GlobalDeleteAtom(hotkeyInfo.ID);
                     DebugHelper.WriteLine("Unable to register hotkey: " + hotkeyInfo);
                     hotkeyInfo.ID = 0;
-                    hotkeyInfo.Status = HotkeyStatus.Failed;
+                    hotkeyInfo.Status = HotkeyStatusEnum.Failed;
                     return;
                 }
 
-                hotkeyInfo.Status = HotkeyStatus.Registered;
+                hotkeyInfo.Status = HotkeyStatusEnum.Registered;
             }
         }
 
@@ -93,12 +94,12 @@ namespace ShareX
                     {
                         NativeMethods.GlobalDeleteAtom(hotkeyInfo.ID);
                         hotkeyInfo.ID = 0;
-                        hotkeyInfo.Status = HotkeyStatus.NotConfigured;
+                        hotkeyInfo.Status = HotkeyStatusEnum.NotConfigured;
                         return true;
                     }
                 }
 
-                hotkeyInfo.Status = HotkeyStatus.Failed;
+                hotkeyInfo.Status = HotkeyStatusEnum.Failed;
             }
 
             return false;

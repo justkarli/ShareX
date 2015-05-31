@@ -27,6 +27,7 @@ using ShareX.Properties;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -96,13 +97,13 @@ namespace ShareX
             switch (Setting.HotkeyInfo.Status)
             {
                 default:
-                case HotkeyStatus.NotConfigured:
+                case HotkeyStatusEnum.NotConfigured:
                     lblHotkeyStatus.BackColor = Color.LightGoldenrodYellow;
                     break;
-                case HotkeyStatus.Failed:
+                case HotkeyStatusEnum.Failed:
                     lblHotkeyStatus.BackColor = Color.IndianRed;
                     break;
-                case HotkeyStatus.Registered:
+                case HotkeyStatusEnum.Registered:
                     lblHotkeyStatus.BackColor = Color.PaleGreen;
                     break;
             }

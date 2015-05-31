@@ -24,22 +24,24 @@
 #endregion License Information (GPL v3)
 
 using System.Windows.Forms;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
     public class HotkeySettings
     {
-        public HotkeyInfo HotkeyInfo { get; set; }
+        private HotkeyInfo _hotkey_info = new HotkeyInfo();
+        public HotkeyInfo HotkeyInfo
+        {
+            get { return _hotkey_info; }
+            private set { _hotkey_info = value; }
+        }
 
         public TaskSettings TaskSettings { get; set; }
 
-        public HotkeySettings()
-        {
-            HotkeyInfo = new HotkeyInfo();
-        }
+        public HotkeySettings() {}
 
-        public HotkeySettings(HotkeyType job, Keys hotkey = Keys.None)
-            : this()
+        public HotkeySettings(HotkeyCommandEnum job, Keys hotkey = Keys.None)
         {
             TaskSettings = TaskSettings.GetDefaultTaskSettings();
             TaskSettings.Job = job;

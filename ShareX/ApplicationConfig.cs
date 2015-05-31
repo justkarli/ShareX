@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
+using ShareX.Hotkey;
 
 namespace ShareX
 {
@@ -131,8 +132,8 @@ namespace ShareX
         [Category("Application"), DefaultValue(true), Description("Automatically expand capture menu when you open the tray menu.")]
         public bool TrayAutoExpandCaptureMenu { get; set; }
 
-        [Category("Application"), DefaultValue(HotkeyType.RectangleRegion), Description("You can set which action to happen when you middle click tray icon."), TypeConverter(typeof(EnumDescriptionConverter))]
-        public HotkeyType TrayMiddleClickAction { get; set; }
+        [Category("Application"), DefaultValue(HotkeyCommandEnum.RectangleRegion), Description("You can set which action to happen when you middle click tray icon."), TypeConverter(typeof(EnumDescriptionConverter))]
+        public HotkeyCommandEnum TrayMiddleClickAction { get; set; }
 
         [Category("Application"), DefaultValue(true), Description("Show tips in main window list when list is empty.")]
         public bool ShowMainWindowTip { get; set; }
