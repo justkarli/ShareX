@@ -221,8 +221,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskManagement\TaskManager.cs" />
     <Compile Include="TaskManagement\TaskSettings.cs" />
-    <Compile Include="UploadInfoParser.cs" />
-    <Compile Include="UploadInfoStatus.cs" />
+    <Compile Include="UploadManager\UploadInfoParser.cs" />
+    <Compile Include="UploadManager\UploadInfoStatus.cs" />
     <Compile Include="Forms\HotkeySettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -731,9 +731,9 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="UploadTask.cs" />
-    <Compile Include="UploadInfoManager.cs" />
-    <Compile Include="UploadManager.cs" />
+    <Compile Include="UploadManager\UploadTask.cs" />
+    <Compile Include="UploadManager\UploadInfoManager.cs" />
+    <Compile Include="UploadManager\UploadManager.cs" />
     <Compile Include="ApplicationConfig.cs" />
     <Compile Include="TaskManagement\TaskInfo.cs" />
     <EmbeddedResource Include="Forms\HotkeySettingsForm.resx">
