@@ -78,6 +78,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="IndexerLib.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

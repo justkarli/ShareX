@@ -31,6 +31,8 @@ namespace ShareX.IndexerLib
 {
     public class PrintIndexerText : PrintIndexerOutput
     {
+        protected StringBuilder _output_content_builder;
+
         protected override string PrintFolderInfo()
         {
             _output_content_builder = new StringBuilder();
@@ -73,6 +75,5 @@ namespace ShareX.IndexerLib
             return _output_content_builder.ToString();
         }
 
-        protected StringBuilder _output_content_builder;
     }
 }
