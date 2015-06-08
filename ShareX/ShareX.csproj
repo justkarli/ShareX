@@ -235,9 +235,9 @@
     <Compile Include="Forms\VideoEncodersForm.Designer.cs">
       <DependentUpon>VideoEncodersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="WatchFolder.cs" />
-    <Compile Include="WatchFolderManager.cs" />
-    <Compile Include="WatchFolderSettings.cs" />
+    <Compile Include="Folderwatcher\WatchFolder.cs" />
+    <Compile Include="Folderwatcher\WatchFolderManager.cs" />
+    <Compile Include="Folderwatcher\WatchFolderSettings.cs" />
     <EmbeddedResource Include="Controls\HotkeySelectionControl.de.resx">
       <DependentUpon>HotkeySelectionControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -776,6 +776,7 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="ClassDiagram3.cd" />
     <None Include="packages.config" />
     <None Include="Resources\RoundedRectangle.png" />
     <None Include="Resources\Rectangle.png" />
