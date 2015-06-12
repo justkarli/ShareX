@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using ShareX.Folderwatcher;
 
 namespace ShareX
 {

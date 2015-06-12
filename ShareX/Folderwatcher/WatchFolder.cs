@@ -23,12 +23,12 @@
 
 #endregion License Information (GPL v3)
 
-using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using ShareX.Folderwatcher;
+using ShareX.HelpersLib;
 
 namespace ShareX
 {
@@ -93,7 +93,7 @@ namespace ShareX
         {
             for (int i = 0; i < timers.Count; i++)
             {
-                if (timers[i].IsElapsed)
+                if (timers[i].IsExpired)
                 {
                     timers.Remove(timers[i]);
                 }
@@ -106,38 +106,6 @@ namespace ShareX
             {
                 fileWatcher.Dispose();
             }
-        }
-    }
-
-    public class WatchFolderDuplicateEventTimer
-    {
-        private const int expireTime = 1000;
-
-        private Stopwatch timer;
-        private string path;
-
-        public bool IsElapsed
-        {
-            get
-            {
-                return timer.ElapsedMilliseconds >= expireTime;
-            }
-        }
-
-        public WatchFolderDuplicateEventTimer(string path)
-        {
-            timer = Stopwatch.StartNew();
-            this.path = path;
-        }
-
-        public bool IsDuplicateEvent(string path)
-        {
-            bool result = path == this.path && !IsElapsed;
-            if (result)
-            {
-                timer = Stopwatch.StartNew();
-            }
-            return result;
         }
     }
 }

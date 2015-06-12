@@ -91,6 +91,7 @@
     <Compile Include="Controls\BeforeUploadControl.Designer.cs">
       <DependentUpon>BeforeUploadControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Folderwatcher\WatchFolderDuplicateEventTimer.cs" />
     <Compile Include="Forms\BeforeUploadForm.cs">
       <SubType>Form</SubType>
     </Compile>
