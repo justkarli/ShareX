@@ -45,7 +45,7 @@ namespace ShareX
         private FileSystemWatcher fileWatcher;
         private List<WatchFolderDuplicateEventTimer> timers = new List<WatchFolderDuplicateEventTimer>();
 
-        public virtual void Enable()
+        public void Enable()
         {
             Dispose();
 
@@ -64,9 +64,7 @@ namespace ShareX
         protected void OnFileWatcherTrigger(string path)
         {
             if (FileWatcherTrigger != null)
-            {
                 FileWatcherTrigger(path);
-            }
         }
 
         private void fileWatcher_Created(object sender, FileSystemEventArgs e)
@@ -78,9 +76,7 @@ namespace ShareX
             foreach (WatchFolderDuplicateEventTimer timer in timers)
             {
                 if (timer.IsDuplicateEvent(path))
-                {
                     return;
-                }
             }
 
             timers.Add(new WatchFolderDuplicateEventTimer(path));
@@ -94,18 +90,14 @@ namespace ShareX
             for (int i = 0; i < timers.Count; i++)
             {
                 if (timers[i].IsExpired)
-                {
                     timers.Remove(timers[i]);
-                }
             }
         }
 
         public void Dispose()
         {
             if (fileWatcher != null)
-            {
                 fileWatcher.Dispose();
-            }
         }
     }
 }

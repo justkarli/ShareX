@@ -14,12 +14,27 @@ namespace ShareX.Folderwatcher
 
         public bool IsDuplicateEvent(string path)
         {
-            bool result = (path == _path && !IsExpired);
+            bool is_event_duplicated = IsEventDuplicated(path);
 
-            if (result)
-                _timer = Stopwatch.StartNew();
+            if (is_event_duplicated)
+                ResetTimer();
          
-            return result;
+            return is_event_duplicated;
+        }
+
+        private void ResetTimer()
+        {
+            _timer = Stopwatch.StartNew();
+        }
+
+        private bool IsPathIdentical(string path)
+        {
+            return _path == path;
+        }
+
+        public bool IsEventDuplicated(string path)
+        {
+            return IsPathIdentical(path) && !IsExpired;
         }
 
         public bool IsExpired
