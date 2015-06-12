@@ -28,6 +28,10 @@ using System.IO;
 
 namespace ShareX.IndexerLib
 {
+    /// <summary>
+    /// Collects folder and file information (recursivly) from a given folder path dependant on the configured settings 
+    /// and stores that information in the DirectoryFileInfo property.
+    /// </summary>
     public class Indexer
     {
         public Indexer(IndexerSettings settings)

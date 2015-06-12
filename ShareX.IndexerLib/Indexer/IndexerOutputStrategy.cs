@@ -2,6 +2,9 @@
 
 namespace ShareX.IndexerLib
 {
+    /// <summary>
+    /// Combines collecting the information of a directory and a file with a desired string output. 
+    /// </summary>
     public class IndexerOutputStrategy
     {
         public IndexerOutputStrategy(Indexer indexer, PrintIndexerOutput output_strategy)

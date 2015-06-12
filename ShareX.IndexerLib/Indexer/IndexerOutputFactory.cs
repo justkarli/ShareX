@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace ShareX.IndexerLib
 {
+    /// <summary>
+    /// Singleton implementation of a dependency container, containing possible indexer output generator.
+    /// Additional output generators can be registered by using the RegisterIndexerOutput method, by extending the IndexerOutputEnum and the class type of the 
+    /// output generator. 
+    /// </summary>
     public class IndexerOutputFactory
     {
         private static IndexerOutputFactory _singleton_factory;
