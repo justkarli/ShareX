@@ -33,8 +33,8 @@ namespace ShareX.IndexerLib
     public static class HtmlHelper
     {
         private const string HTML_CSS_IMPORT_FORMAT = "<style type=\"text/css\">\r\n{0}\r\n</style>";
-        private const string HTML_STYLE_TAG_FORMAT = "style=\"{0}\"";
-        private const string HTML_START_TAG_FORMAT = "<{0} {2} {1}>";
+        private const string HTML_STYLE_TAG_FORMAT = " style=\"{0}\" ";
+        private const string HTML_START_TAG_FORMAT = "<{0}{2}{1}>";
         private const string HTML_END_TAG_FORMAT = "</{0}>";
 
         public static string GetCssStyle(string css_file)
@@ -55,6 +55,9 @@ namespace ShareX.IndexerLib
 
             if (!string.IsNullOrEmpty(style_name))
                 css = string.Format(HTML_STYLE_TAG_FORMAT, style_name);
+
+            if (!string.IsNullOrEmpty(attributes))
+                attributes = " " + attributes;
 
             return string.Format(HTML_START_TAG_FORMAT, html_tag_name, attributes, css);
         }
