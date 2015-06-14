@@ -40,14 +40,10 @@ namespace ShareX
 
         public static bool IsBusy
         {
-            get
-            {
-                return Tasks.Count > 0 && Tasks.Any(task => task.Status != TaskStatus.Completed);
-            }
+            get { return Tasks.Count > 0 && Tasks.Any(task => task.Status != TaskStatus.Completed); }
         }
 
         private static readonly List<UploadTask> Tasks = new List<UploadTask>();
-
         public static readonly RecentManager RecentManager = new RecentManager();
 
         private static int lastIconStatus = -1;
@@ -93,18 +89,12 @@ namespace ShareX
                 int len;
 
                 if (Program.Settings.UploadLimit == 0)
-                {
                     len = inQueueTasks.Length;
-                }
                 else
-                {
                     len = (Program.Settings.UploadLimit - workingTasksCount).Between(0, inQueueTasks.Length);
-                }
 
                 for (int i = 0; i < len; i++)
-                {
                     inQueueTasks[i].Start();
-                }
             }
         }
 
@@ -112,7 +102,8 @@ namespace ShareX
         {
             foreach (UploadTask task in Tasks)
             {
-                if (task != null) task.Stop();
+                if (task != null)
+                    task.Stop();
             }
         }
 
@@ -130,9 +121,7 @@ namespace ShareX
                     UploadTask tag = lvi.Tag as UploadTask;
 
                     if (tag != null && tag == task)
-                    {
                         return lvi;
-                    }
                 }
             }
 
@@ -146,9 +135,7 @@ namespace ShareX
                 ListViewItem lvi = FindListViewItem(task);
 
                 if (lvi != null)
-                {
                     lvi.SubItems[1].Text = task.Info.Status;
-                }
             }
         }
 
@@ -170,14 +157,12 @@ namespace ShareX
                 lvi.SubItems.Add(string.Empty);
                 lvi.SubItems.Add(string.Empty);
                 lvi.ImageIndex = 3;
+
                 if (Program.Settings.ShowMostRecentTaskFirst)
-                {
                     ListViewControl.Items.Insert(0, lvi);
-                }
                 else
-                {
                     ListViewControl.Items.Add(lvi);
-                }
+
                 lvi.EnsureVisible();
                 ListViewControl.FillLastColumn();
             }
@@ -222,9 +207,7 @@ namespace ShareX
                     lvi.SubItems[2].Text = string.Format("{0} / {1}", info.Progress.Position.ToSizeString(Program.Settings.BinaryUnits), info.Progress.Length.ToSizeString(Program.Settings.BinaryUnits));
 
                     if (info.Progress.Speed > 0)
-                    {
                         lvi.SubItems[3].Text = ((long)info.Progress.Speed).ToSizeString(Program.Settings.BinaryUnits) + "/s";
-                    }
 
                     lvi.SubItems[4].Text = Helpers.ProperTimeSpan(info.Progress.Elapsed);
                     lvi.SubItems[5].Text = Helpers.ProperTimeSpan(info.Progress.Remaining);
@@ -241,9 +224,7 @@ namespace ShareX
                 if (ListViewControl != null && task != null)
                 {
                     if (task.RequestSettingUpdate)
-                    {
                         Program.MainForm.UpdateMainFormSettings();
-                    }
 
                     TaskInfo info = task.Info;
 
@@ -267,15 +248,11 @@ namespace ShareX
                             if (!info.TaskSettings.AdvancedSettings.DisableNotifications)
                             {
                                 if (task.Info.TaskSettings.GeneralSettings.PlaySoundAfterUpload)
-                                {
                                     Helpers.PlaySoundAsync(Resources.ErrorSound);
-                                }
 
                                 if (info.TaskSettings.GeneralSettings.PopUpNotification != PopUpNotificationType.None && Program.MainForm.niTray.Visible)
-                                {
                                     Program.MainForm.niTray.ShowBalloonTip(5000, "ShareX - " + Resources.TaskManager_task_UploadCompleted_Error,
                                         errors, ToolTipIcon.Error);
-                                }
                             }
                         }
                         else
@@ -285,9 +262,7 @@ namespace ShareX
                             string result = info.Result.ToString();
 
                             if (string.IsNullOrEmpty(result) && !string.IsNullOrEmpty(info.FilePath))
-                            {
                                 result = info.FilePath;
-                            }
 
                             if (lvi != null)
                             {
@@ -296,31 +271,24 @@ namespace ShareX
                                 lvi.ImageIndex = 2;
 
                                 if (!string.IsNullOrEmpty(result))
-                                {
                                     lvi.SubItems[6].Text = result;
-                                }
+
                             }
 
                             if (!task.StopRequested && !string.IsNullOrEmpty(result))
                             {
                                 if (task.Info.TaskSettings.GeneralSettings.SaveHistory)
-                                {
-                                    HistoryManager.AddHistoryItemAsync(Program.HistoryFilePath, info.GetHistoryItem());
-                                }
+                                    HistoryManager.AddHistoryItemAsync(Program.HistoryFilePath, TaskHelpers.BuildHistoryItemFromTaskInfo(info));
 
                                 RecentManager.Add(result);
 
                                 if (!info.TaskSettings.AdvancedSettings.DisableNotifications && info.Job != TaskJob.ShareURL)
                                 {
                                     if (task.Info.TaskSettings.GeneralSettings.PlaySoundAfterUpload)
-                                    {
                                         Helpers.PlaySoundAsync(Resources.TaskCompletedSound);
-                                    }
 
                                     if (!string.IsNullOrEmpty(info.TaskSettings.AdvancedSettings.BalloonTipContentFormat))
-                                    {
                                         result = new UploadInfoParser().Parse(info, info.TaskSettings.AdvancedSettings.BalloonTipContentFormat);
-                                    }
 
                                     if (!string.IsNullOrEmpty(result))
                                     {
@@ -359,18 +327,14 @@ namespace ShareX
                         }
 
                         if (lvi != null)
-                        {
                             lvi.EnsureVisible();
-                        }
                     }
                 }
             }
             finally
             {
                 if (!IsBusy && Program.CLI.IsCommandExist("AutoClose"))
-                {
                     Application.Exit();
-                }
                 else
                 {
                     StartTasks();
@@ -393,32 +357,24 @@ namespace ShareX
                 workingTasks = workingTasks.Where(x => x.Info.Progress != null);
 
                 if (workingTasks.Count() > 0)
-                {
                     averageProgress = workingTasks.Average(x => x.Info.Progress.Percentage);
-                }
             }
 
             int progress = isWorkingTasks ? ((int)averageProgress).Between(0, 99) : -1;
             UpdateTrayIcon(progress);
 
-            string title;
+            string title = Program.Title;
 
             if (isWorkingTasks)
             {
                 title = string.Format("{0} - {1:0.0}%", Program.Title, averageProgress);
                 TaskbarManager.SetProgressValue(Program.MainForm, (int)averageProgress);
             }
-            else
-            {
-                title = Program.Title;
-            }
 
             Program.MainForm.Text = title;
 
             if (!IsBusy)
-            {
                 TaskbarManager.SetProgressState(Program.MainForm, TaskbarProgressBarStatus.NoProgress);
-            }
         }
 
         public static void UpdateTrayIcon(int progress = -1)

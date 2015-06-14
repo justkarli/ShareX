@@ -23,12 +23,11 @@
 
 #endregion License Information (GPL v3)
 
-using ShareX.HelpersLib;
-using ShareX.HistoryLib;
-using ShareX.UploadersLib;
-using ShareX.UploadersLib.HelperClasses;
 using System;
 using System.IO;
+using ShareX.HelpersLib;
+using ShareX.UploadersLib;
+using ShareX.UploadersLib.HelperClasses;
 
 namespace ShareX
 {
@@ -37,28 +36,10 @@ namespace ShareX
         public TaskInfo(TaskSettings taskSettings)
         {
             if (taskSettings == null)
-            {
                 taskSettings = TaskSettings.GetDefaultTaskSettings();
-            }
 
             TaskSettings = taskSettings;
             Result = new UploadResult();
-        }
-
-        public HistoryItem GetHistoryItem()
-        {
-            return new HistoryItem
-            {
-                Filename = FileName,
-                Filepath = FilePath,
-                DateTimeUtc = UploadTime,
-                Type = DataType.ToString(),
-                Host = UploaderHost,
-                URL = Result.URL,
-                ThumbnailURL = Result.ThumbnailURL,
-                DeletionURL = Result.DeletionURL,
-                ShortenedURL = Result.ShortenedURL
-            };
         }
 
         public TaskSettings TaskSettings { get; set; }
@@ -78,22 +59,15 @@ namespace ShareX
 
         public string FilePath
         {
-            get
-            {
-                return filePath;
-            }
+            get { return filePath; }
             set
             {
                 filePath = value;
 
                 if (string.IsNullOrEmpty(filePath))
-                {
                     FileName = string.Empty;
-                }
                 else
-                {
                     FileName = Path.GetFileName(filePath);
-                }
             }
         }
 

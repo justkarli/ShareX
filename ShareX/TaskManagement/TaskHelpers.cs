@@ -38,20 +38,35 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using ShareX.HistoryLib;
 
 namespace ShareX
 {
     public static class TaskHelpers
     {
+        public static HistoryItem BuildHistoryItemFromTaskInfo(TaskInfo task_info)
+        {
+            return new HistoryItem
+            {
+                Filename = task_info.FileName,
+                Filepath = task_info.FilePath,
+                DateTimeUtc = task_info.UploadTime,
+                Type = task_info.DataType.ToString(),
+                Host = task_info.UploaderHost,
+                URL = task_info.Result.URL,
+                ThumbnailURL = task_info.Result.ThumbnailURL,
+                DeletionURL = task_info.Result.DeletionURL,
+                ShortenedURL = task_info.Result.ShortenedURL
+            };
+        }
+
         public static ImageData PrepareImage(Image img, TaskSettings taskSettings)
         {
             ImageData imageData = new ImageData();
             imageData.ImageFormat = taskSettings.ImageSettings.ImageFormat;
 
             if (taskSettings.ImageSettings.ImageFormat == EImageFormat.JPEG)
-            {
                 img = ImageHelpers.FillBackground(img, Color.White);
-            }
 
             imageData.ImageStream = SaveImage(img, taskSettings.ImageSettings.ImageFormat, taskSettings);
 
@@ -60,9 +75,7 @@ namespace ShareX
             if (taskSettings.ImageSettings.ImageFormat != taskSettings.ImageSettings.ImageFormat2 && sizeLimit > 0 && imageData.ImageStream.Length > sizeLimit)
             {
                 if (taskSettings.ImageSettings.ImageFormat2 == EImageFormat.JPEG)
-                {
                     img = ImageHelpers.FillBackground(img, Color.White);
-                }
 
                 imageData.ImageStream = SaveImage(img, taskSettings.ImageSettings.ImageFormat2, taskSettings);
                 imageData.ImageFormat = taskSettings.ImageSettings.ImageFormat2;
@@ -91,6 +104,7 @@ namespace ShareX
                             Width = taskSettings.ImageSettings.ThumbnailWidth,
                             Height = taskSettings.ImageSettings.ThumbnailHeight
                         }.Apply(thumbImage);
+
                         thumbImage = ImageHelpers.FillBackground(thumbImage, Color.White);
                         thumbImage.SaveJPG(thumbnailFilePath, 90);
                         return thumbnailFilePath;
@@ -102,9 +116,7 @@ namespace ShareX
                     finally
                     {
                         if (thumbImage != null)
-                        {
                             thumbImage.Dispose();
-                        }
                     }
                 }
             }
@@ -151,9 +163,7 @@ namespace ShareX
             string filename = nameParser.Parse(taskSettings.UploadSettings.NameFormatPattern);
 
             if (!string.IsNullOrEmpty(extension))
-            {
                 filename += "." + extension.TrimStart('.');
-            }
 
             Program.Settings.NameParserAutoIncrementNumber = nameParser.AutoIncrementNumber;
 
@@ -182,13 +192,9 @@ namespace ShareX
             }
 
             if (string.IsNullOrEmpty(nameParser.WindowText))
-            {
                 filename = nameParser.Parse(taskSettings.UploadSettings.NameFormatPattern) + ".bmp";
-            }
             else
-            {
                 filename = nameParser.Parse(taskSettings.UploadSettings.NameFormatPatternActiveWindow) + ".bmp";
-            }
 
             Program.Settings.NameParserAutoIncrementNumber = nameParser.AutoIncrementNumber;
 
@@ -267,9 +273,7 @@ namespace ShareX
                 using (ImageEffectsForm imageEffectsForm = new ImageEffectsForm(img, taskSettings.ImageSettings.ImageEffects))
                 {
                     if (imageEffectsForm.ShowDialog() == DialogResult.OK)
-                    {
                         taskSettings.ImageSettings.ImageEffects = imageEffectsForm.Effects;
-                    }
                 }
             }
 
