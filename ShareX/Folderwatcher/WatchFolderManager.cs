@@ -29,6 +29,10 @@ using System.Linq;
 
 namespace ShareX
 {
+    /// <summary>
+    /// Watches over local folders, which want to be synchronized with a public repository. Changes in those folders will be recognized every second,
+    /// and changed files will be uploaded to the configured repository.
+    /// </summary>
     public class WatchFolderManager : IDisposable
     {
         public List<WatchFolder> WatchFolders { get; private set; }

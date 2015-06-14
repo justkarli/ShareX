@@ -32,18 +32,20 @@ using ShareX.HelpersLib;
 
 namespace ShareX
 {
+    /// <summary>
+    /// Watches a given folder path for changes and raises the FileWatcherTrigger event.
+    /// </summary>
     public class WatchFolder : IDisposable
     {
         public WatchFolderSettings Settings { get; set; }
         public TaskSettings TaskSettings { get; set; }
 
-        public delegate void FileWatcherTriggerEventHandler(string path);
-
-        public event FileWatcherTriggerEventHandler FileWatcherTrigger;
-
         private SynchronizationContext context;
         private FileSystemWatcher fileWatcher;
         private List<WatchFolderDuplicateEventTimer> timers = new List<WatchFolderDuplicateEventTimer>();
+
+        public event FileWatcherTriggerEventHandler FileWatcherTrigger;
+        public delegate void FileWatcherTriggerEventHandler(string path);
 
         public void Enable()
         {
@@ -54,7 +56,10 @@ namespace ShareX
                 context = SynchronizationContext.Current ?? new SynchronizationContext();
 
                 fileWatcher = new FileSystemWatcher(Settings.FolderPath);
-                if (!string.IsNullOrEmpty(Settings.Filter)) fileWatcher.Filter = Settings.Filter;
+                
+                if (!string.IsNullOrEmpty(Settings.Filter))
+                    fileWatcher.Filter = Settings.Filter;
+
                 fileWatcher.IncludeSubdirectories = Settings.IncludeSubdirectories;
                 fileWatcher.Created += fileWatcher_Created;
                 fileWatcher.EnableRaisingEvents = true;
