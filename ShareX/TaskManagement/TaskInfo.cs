@@ -42,21 +42,91 @@ namespace ShareX
             Result = new UploadResult();
         }
 
+        private bool IsTextFileUpload()
+        {
+            return (DataType == EDataType.Text && TaskSettings.TextDestination == TextDestination.FileUploader);
+        }
+
+        private bool IsImageFileUpload()
+        {
+            return (DataType == EDataType.Image && TaskSettings.ImageDestination == ImageDestination.FileUploader);
+        }
+
+        private string GetUploadDestination()
+        {
+            switch (UploadDestination)
+            {
+                case EDataType.Image:
+                    return TaskSettings.ImageDestination.GetLocalizedDescription();
+                case EDataType.Text:
+                    return TaskSettings.TextDestination.GetLocalizedDescription();
+                case EDataType.File:
+                    switch (DataType)
+                    {
+                        case EDataType.Image:
+                            return TaskSettings.ImageFileDestination.GetLocalizedDescription();
+                        case EDataType.Text:
+                            return TaskSettings.TextFileDestination.GetLocalizedDescription();
+                        default:
+                        case EDataType.File:
+                            return TaskSettings.FileDestination.GetLocalizedDescription();
+                    }
+                case EDataType.URL:
+                    if (Job == TaskJob.ShareURL)
+                    {
+                        return TaskSettings.URLSharingServiceDestination.GetLocalizedDescription();
+                    }
+
+                    return TaskSettings.URLShortenerDestination.GetLocalizedDescription();
+            }
+            return string.Empty;
+        }
+
+        public string UploaderHost
+        {
+            get
+            {
+                if (IsUploadJob)
+                    return GetUploadDestination();
+
+                return string.Empty;
+            }
+        }
+
         public TaskSettings TaskSettings { get; set; }
+        public TaskJob Job { get; set; }
+
+        public ProgressManager Progress { get; set; }
+
+        public EDataType DataType { get; set; }
+        public EDataType UploadDestination
+        {
+            get
+            {
+                if (IsImageFileUpload() || IsTextFileUpload())
+                    return EDataType.File;
+
+                return DataType;
+            }
+        }
+
+        public DateTime StartTime { get; set; }
+        public DateTime UploadTime { get; set; }
+        public TimeSpan UploadDuration
+        {
+            get { return UploadTime - StartTime; }
+        }
+
+        public UploadResult Result { get; set; }
 
         public string Status { get; set; }
-
-        public TaskJob Job { get; set; }
 
         public bool IsUploadJob
         {
             get { return Job != TaskJob.Job || TaskSettings.AfterCaptureJob.HasFlag(AfterCaptureTasks.UploadImageToHost); }
         }
 
-        public ProgressManager Progress { get; set; }
-
         private string filePath;
-
         public string FilePath
         {
             get { return filePath; }
@@ -72,69 +142,6 @@ namespace ShareX
         }
 
         public string FileName { get; set; }
-
         public string ThumbnailFilePath { get; set; }
-
-        public EDataType DataType { get; set; }
-
-        public EDataType UploadDestination
-        {
-            get
-            {
-                if ((DataType == EDataType.Image && TaskSettings.ImageDestination == ImageDestination.FileUploader) ||
-                    (DataType == EDataType.Text && TaskSettings.TextDestination == TextDestination.FileUploader))
-                {
-                    return EDataType.File;
-                }
-
-                return DataType;
-            }
-        }
-
-        public string UploaderHost
-        {
-            get
-            {
-                if (IsUploadJob)
-                {
-                    switch (UploadDestination)
-                    {
-                        case EDataType.Image:
-                            return TaskSettings.ImageDestination.GetLocalizedDescription();
-                        case EDataType.Text:
-                            return TaskSettings.TextDestination.GetLocalizedDescription();
-                        case EDataType.File:
-                            switch (DataType)
-                            {
-                                case EDataType.Image:
-                                    return TaskSettings.ImageFileDestination.GetLocalizedDescription();
-                                case EDataType.Text:
-                                    return TaskSettings.TextFileDestination.GetLocalizedDescription();
-                                default:
-                                case EDataType.File:
-                                    return TaskSettings.FileDestination.GetLocalizedDescription();
-                            }
-                        case EDataType.URL:
-                            if (Job == TaskJob.ShareURL)
-                            {
-                                return TaskSettings.URLSharingServiceDestination.GetLocalizedDescription();
-                            }
-
-                            return TaskSettings.URLShortenerDestination.GetLocalizedDescription();
-                    }
-                }
-
-                return string.Empty;
-            }
-        }
-
-        public DateTime StartTime { get; set; }
-        public DateTime UploadTime { get; set; }
-        public TimeSpan UploadDuration
-        {
-            get { return UploadTime - StartTime; }
-        }
-
-        public UploadResult Result { get; set; }
     }
 }
