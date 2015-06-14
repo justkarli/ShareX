@@ -34,17 +34,42 @@ namespace ShareX
 {
     public class TaskInfo
     {
+        public TaskInfo(TaskSettings taskSettings)
+        {
+            if (taskSettings == null)
+            {
+                taskSettings = TaskSettings.GetDefaultTaskSettings();
+            }
+
+            TaskSettings = taskSettings;
+            Result = new UploadResult();
+        }
+
+        public HistoryItem GetHistoryItem()
+        {
+            return new HistoryItem
+            {
+                Filename = FileName,
+                Filepath = FilePath,
+                DateTimeUtc = UploadTime,
+                Type = DataType.ToString(),
+                Host = UploaderHost,
+                URL = Result.URL,
+                ThumbnailURL = Result.ThumbnailURL,
+                DeletionURL = Result.DeletionURL,
+                ShortenedURL = Result.ShortenedURL
+            };
+        }
+
         public TaskSettings TaskSettings { get; set; }
 
         public string Status { get; set; }
+
         public TaskJob Job { get; set; }
 
         public bool IsUploadJob
         {
-            get
-            {
-                return Job != TaskJob.Job || TaskSettings.AfterCaptureJob.HasFlag(AfterCaptureTasks.UploadImageToHost);
-            }
+            get { return Job != TaskJob.Job || TaskSettings.AfterCaptureJob.HasFlag(AfterCaptureTasks.UploadImageToHost); }
         }
 
         public ProgressManager Progress { get; set; }
@@ -73,7 +98,9 @@ namespace ShareX
         }
 
         public string FileName { get; set; }
+
         public string ThumbnailFilePath { get; set; }
+
         public EDataType DataType { get; set; }
 
         public EDataType UploadDestination
@@ -129,42 +156,11 @@ namespace ShareX
 
         public DateTime StartTime { get; set; }
         public DateTime UploadTime { get; set; }
-
         public TimeSpan UploadDuration
         {
-            get
-            {
-                return UploadTime - StartTime;
-            }
+            get { return UploadTime - StartTime; }
         }
 
         public UploadResult Result { get; set; }
-
-        public TaskInfo(TaskSettings taskSettings)
-        {
-            if (taskSettings == null)
-            {
-                taskSettings = TaskSettings.GetDefaultTaskSettings();
-            }
-
-            TaskSettings = taskSettings;
-            Result = new UploadResult();
-        }
-
-        public HistoryItem GetHistoryItem()
-        {
-            return new HistoryItem
-            {
-                Filename = FileName,
-                Filepath = FilePath,
-                DateTimeUtc = UploadTime,
-                Type = DataType.ToString(),
-                Host = UploaderHost,
-                URL = Result.URL,
-                ThumbnailURL = Result.ThumbnailURL,
-                DeletionURL = Result.DeletionURL,
-                ShortenedURL = Result.ShortenedURL
-            };
-        }
     }
 }
